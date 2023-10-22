@@ -605,14 +605,6 @@ a {
   }
 
   @media screen and (max-device-width: 500px) and (-webkit-device-pixel-ratio: 3) {
-    body {
-        font-size: 2em;
-    }
-
-    .head-font {
-        font-size: 2em;             
-    }
-
     .home-title-container {
         top: 3%;
         max-block-size: 10px;
