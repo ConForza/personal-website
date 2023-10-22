@@ -513,7 +513,7 @@ a {
     }
   }
 
-@media screen and (max-width: 800px) {
+@media screen and (max-device-width: 800px) {
     .home-title-container {
         top: 6%;
         text-align: right;
