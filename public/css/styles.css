@@ -605,6 +605,10 @@ a {
   }
 
   @media screen and (max-device-width: 600px) {
+    body {
+        font-size: 2em;
+    }
+
     .home-title-container {
         top: 3%;
         max-block-size: 10px;
