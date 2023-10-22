@@ -604,7 +604,7 @@ a {
     }
   }
 
-  @media screen and (max-width: 500px) {
+  @media screen and (max-width: 500px) and (-webkit-device-pixel-ratio: 3) {
     .home-title-container {
         top: 3%;
         max-block-size: 10px;
