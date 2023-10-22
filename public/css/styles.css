@@ -610,7 +610,7 @@ a {
 
   @media screen and (max-device-width: 500px) and (-webkit-device-pixel-ratio: 3) {
     body {
-        font-size: 120%;
+        font-size: 200%;
     }
 
     .home-title-container {
