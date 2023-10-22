@@ -1,3 +1,7 @@
+html {
+    font-size: 1.375em;
+}
+
 .header-container {
     background-color: #F0F0F0;
     width: 700px;
