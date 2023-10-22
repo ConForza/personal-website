@@ -609,6 +609,10 @@ a {
         font-size: 2em;
     }
 
+    .head-font {
+        font-size: 2em;             
+    }
+
     .home-title-container {
         top: 3%;
         max-block-size: 10px;
