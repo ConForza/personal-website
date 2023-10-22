@@ -1,0 +1,39 @@
+<%- include("partials/header.ejs") %>
+<body>
+<div class="concerts-container">
+    <div class="events-container">
+        <h3 class="concert-heading"><%= heading %></h3>
+        <h6><%- link %></h6>
+        <% if (locals.concertsList.length > 0) { %>
+            <% concertsList.forEach((concert) => { %>
+                <div class="concert-event">
+                    <h5 class="concert-title"><%= concert.date.toLocaleString('en-GB', {day: 'numeric', month: 'long', year: 'numeric'}) %> - <%= concert.venue %></h5>
+                    <% if (concert.notes) { %>
+                        <h6 class="concert-title"><%= concert.notes %></h6>
+                    <% } %>
+                    <% if (concert.repertoire.length > 0) { %>
+                        <ul class="concert-list">
+                        <% concert.repertoire.forEach((work) => { %>
+                            <li><h6 class="concert-composer"><%= work.composer %></h6>
+                                <ul class="concert-work">
+                                    <li><%= work.work %></li>
+                                </ul>
+                        <% }) %>
+                        </ul>
+                    <% } else { %>
+                        <p class="concert-list">Programme to be confirmed</p>
+                    <% } %>
+                </div>
+            <% }) %>
+        <% } else { %>
+            <div class="concert-event">
+                <span>No concerts to show</span>
+            </div>
+        <% } %>
+    </div>
+    <div class="logo-container">
+        <div class="events-logo"><i class="fa-solid fa-calendar-week"></i></div>
+    </div>
+</div>
+</body>
+<%- include("partials/footer.ejs") %>

@@ -1,0 +1,28 @@
+<%- include("partials/header.ejs") %>
+<body>
+<div class="contact-frame">
+    <div class="contact-text">
+      <% if (locals.confirmation) { %>
+        <%= confirmation %>
+      <% } else { %>
+        Contact Gary directly using the form below.
+      <% } %>
+        <form action="/contact" method="POST">
+            <div class="form-group">
+              <label for="form-email">Email address</label>
+              <input type="email" name="email" class="form-control" id="form-email" aria-describedby="emailHelp" placeholder="Enter email">
+            </div>
+            <div class="form-group">
+              <label for="form-subject">Subject</label>
+              <input type="text" name="subject" class="form-control" id="form-subject" placeholder="Enter subject">
+            </div>
+            <div class="form-group">
+                <label for="form-message">Message</label>
+                <textarea class="form-control" name="message" id="form-message" rows="8"></textarea>
+              </div>
+            <button type="submit" class="btn btn-secondary float-end">Submit</button>
+          </form>
+    </div>
+</div>
+</body>
+<%- include("partials/footer.ejs") %>

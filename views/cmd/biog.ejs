@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Classical Music Database</title>
+    <link rel="stylesheet" href="/css/cmd.css"/>
+</head>
+<body>
+    <div class="main-container">
+    <div class="composer-container">
+        <h1><%= composer.complete_name %> (<%= composer.birth.split("-")[0] %> - <% if (locals.composer.death) { %><%= composer.death.split("-")[0] %><%}%>)</h1>
+        <div class="composer-details">
+            <img src="<%= composer.portrait %>" alt="Image of <%= composer.name %>" id="composer-img"/>
+            <h3>Era: <%= composer.epoch %></h3>
+            <% if (locals.works) { %>
+                <ul>
+                    <h3 class="section-header">Main Works</h3>
+                    <% works.forEach((work) => { %>
+                        <li><%= work.title %></li>
+                    <% }) %>
+            <% } %>
+            <ul>
+            <h3 class="section-header">Listen to this random work</h3>
+            <span class="generated-work"><%= random %></span><button id="btn-generate">Generate again</button>
+        </div>
+    </div>
+    </div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
+<script>
+    $("#btn-generate").on("click", () => {
+        location.reload();
+    })
+</script>
+</body>
+</html>

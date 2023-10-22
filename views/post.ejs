@@ -1,0 +1,13 @@
+<%- include("partials/header.ejs") %>
+<body>
+<div class="blog-frame">
+    <div class="blog-text">
+        <h4 class="blog-title"><%= blogPost.title %></h4>
+        <br>
+        <p><%- blogPost.content %></p>
+        <br>
+        <p class="blog-timestamp">Posted on: <%= blogPost.date.toLocaleString('en-GB') %></p>
+    </div>
+</div>
+</body>
+<%- include("partials/footer.ejs") %>
