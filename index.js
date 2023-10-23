@@ -12,8 +12,12 @@ const emailUser = process.env.EMAIL_USER;
 const emailPassword = process.env.EMAIL_PASSWORD;
 const todayDate = new Date().toISOString("en-GB", {timeZone: "Europe/London"})
 var transporter = nodemailer.createTransport({
-  host: "smtp.office365.com",
+  host: "smtp.gmail.com",
   port: 587,
+  secure: false, 
+  requireTLS: true,
+  logger: true,
+  debug: true,
   auth: {
       user: emailUser,
       pass: emailPassword
@@ -129,7 +133,7 @@ app.post('/contact', async (req, res) => {
 
   async function main() {
     const info = await transporter.sendMail({
-      from: `Gary O'Shea <gary@garyoshea.co.uk>`,
+      from: `Gary O'Shea <${emailUser}>`,
       to: `gary@garyoshea.co.uk`,
       subject: subject,
       text: 
