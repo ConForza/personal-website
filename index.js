@@ -3,7 +3,7 @@ import mongoose from 'mongoose'
 import bodyParser from 'body-parser'
 import nodemailer from 'nodemailer'
 import axios from 'axios'
-import 'dotenv/config'
+// import 'dotenv/config'
 
 const app = express()
 const port = 3000
