@@ -3,7 +3,7 @@ import mongoose from 'mongoose'
 import bodyParser from 'body-parser'
 import nodemailer from 'nodemailer'
 import axios from 'axios'
-// import 'dotenv/config'
+import 'dotenv/config'
 
 const app = express()
 const port = 3000
@@ -90,10 +90,9 @@ app.get('/blog', async (req, res) => {
   let heading
   let link
   let blogCount
-  let archived = false
   if (req.query.archived) {
     archived = true
-    blogsList = await Blog.find({archived: true}).sort({date: -1})
+    blogsList = await Blog.find({archived: true}).sort({_id: -1})
     blogCount = blogsList.length
     if (req.query.page) {
       blogPosts = blogsList.splice((req.query.page - 1) * 10, req.query.page * 10)
@@ -103,7 +102,7 @@ app.get('/blog', async (req, res) => {
     heading = "Archived Posts"
     link = '<a class="concert-link" href="/blog">View new blogs</a>'
   } else {
-    blogsList = await Blog.find({archived: {$ne: true}}).sort({date: -1})
+    blogsList = await Blog.find({archived: {$ne: true}}).sort({_id: -1})
     blogCount = blogsList.length
     if (req.query.page) {
       blogPosts = blogsList.splice((req.query.page - 1) * 10, req.query.page * 10)

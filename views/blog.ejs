@@ -10,11 +10,21 @@
         <div class="blog-text">     
             <h5 class="blog-title"><%= blog.title %></h5>
             <% if (blog.content.length > 300) { %>
-                <p><%= blog.content.slice(0, 299) %> <a class="blog-link" href="/posts/<%= blog._id %>">more...</a></p>
-                <p class="blog-timestamp">Posted on: <%= blog.date.toLocaleString('en-GB') %></p>
+                <p><%- blog.content.slice(0, 299) %> <a class="blog-link" href="/posts/<%= blog._id %>">more...</a></p>
+                <% if (blog.date) { %>
+                    <p class="blog-timestamp">Posted on: <%= blog.date.toLocaleString('en-GB') %></p>
+                <% } else { %>
+                    <% const date = blog._id.getTimestamp() %>
+                    <p class="blog-timestamp">Posted on: <%= date.toLocaleString('en-GB') %></p>
+                <% } %>
             <% } else { %>
-                <p><%= blog.content %></p>
-                <p class="blog-timestamp">Posted on: <%= blog.date.toLocaleString('en-GB') %></p>
+                <p><%- blog.content %></p>
+                <% if (blog.date) { %>
+                    <p class="blog-timestamp">Posted on: <%= blog.date.toLocaleString('en-GB') %></p>
+                <% } else { %>
+                    <% const date = blog._id.getTimestamp() %>
+                    <p class="blog-timestamp">Posted on: <%= date.toLocaleString('en-GB') %></p>
+                <% } %>
             <% } %>
         </div>
         <% }) %>
