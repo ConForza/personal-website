@@ -94,6 +94,7 @@ head {
     display: flex;
     justify-content: center;
     margin-top: 45px;
+    width: 90%;
 }
 
 .biog-photo {
@@ -464,6 +465,10 @@ a {
     padding: 0 10px;
 }
 
+footer {
+    padding: 25px 30px;
+}
+
 @media screen and (max-width: 1100px) {
     .biog-photo {
         width: 35%;
@@ -535,7 +540,6 @@ a {
 
     .header-bubble {
         margin-top: 30px;
-        width: 80%;
     }
 
     .concerts-container {
@@ -608,7 +612,7 @@ a {
     }
   }
 
-  @media screen and (max-device-width: 500px) and (-webkit-device-pixel-ratio: 3) {
+  @media screen and (max-device-width: 500px) {
     body {
         font-size: 200%;
     }
@@ -633,8 +637,12 @@ a {
     }
 
     .header-bubble {
+        width: 95%;
         margin-top: 10px;
-        width: 90%;
+    }
+
+    .header-container {
+        width: 100%;
     }
 
     .concerts-container {
@@ -668,6 +676,22 @@ a {
         margin: 10px 0px;
     }
 
+    .research-container {
+        width: 95%;
+    }
+
+    .rep-container {
+        width: 95%;
+    }
+
+    .concerts-container {
+        width: 95%;
+    }
+
+    .concert-event {
+        width: 100%;
+    }
+
     .research-item {
         margin: 10px 0px;
     }
@@ -677,7 +701,10 @@ a {
     }
 
     .apps-frame {
-        width: 90%;
+        width: 95%;
     }
 
+    footer {
+        padding: 25px 20px 35px 20px;
+    }
   }
