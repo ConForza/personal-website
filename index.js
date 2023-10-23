@@ -130,8 +130,8 @@ app.post('/contact', async (req, res) => {
   async function main() {
     const info = await transporter.sendMail({
       from: `Gary O'Shea <gary@garyoshea.co.uk>`,
-      to: `gary@garyoshea.co.uk, ${emailTo}`,
-      subject: "Thank you for emailing garyoshea.co.uk",
+      to: `gary@garyoshea.co.uk`,
+      subject: subject,
       text: 
 `Form submission to garyoshea.co.uk.
 
