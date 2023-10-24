@@ -90,6 +90,7 @@ app.get('/blog', async (req, res) => {
   let heading
   let link
   let blogCount
+  let archived = false
   if (req.query.archived) {
     archived = true
     blogsList = await Blog.find({archived: true}).sort({_id: -1})
