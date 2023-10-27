@@ -726,4 +726,8 @@ footer {
     .navbar-toggler-icon {
         font-size: 2em !important;
       }
+
+    li i {
+        font-size: 1.6em;
+    }
   }
