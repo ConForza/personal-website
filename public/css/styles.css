@@ -736,4 +736,8 @@ li i {
         font-size: 1.5em;
         padding: 0 10px;
     }
+
+    input::placeholder {
+        font-size: 2rem;
+    }
   }
