@@ -479,6 +479,11 @@ footer {
     padding: 25px 30px;
 }
 
+li i {
+    padding: 0 5px;
+    font-size: 1.2em;
+}
+
 @media screen and (max-width: 1100px) {
     .biog-photo {
         width: 35%;
@@ -624,7 +629,7 @@ footer {
 
   @media screen and (max-device-width: 500px) {
     body {
-        font-size: 2.8em;
+        font-size: 2.6em;
     }
 
     h1, h2, h3, h4, h5, h6, h7 {
