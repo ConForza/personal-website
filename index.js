@@ -13,7 +13,7 @@ const emailPassword = process.env.EMAIL_PASSWORD;
 const todayDate = new Date().toISOString("en-GB", {timeZone: "Europe/London"})
 var transporter = nodemailer.createTransport({
   host: "smtp.gmail.com",
-  port: 587,
+  port: 465,
   secure: false, 
   requireTLS: true,
   logger: true,
