@@ -391,12 +391,15 @@ footer {
     margin-top: 20px;
 }
 
-.contact-text > form > div {
-    margin: 20px 0px;
+.google-form {
+    width: 100%;
 }
 
-.form-group > label {
-    margin-bottom: 5px;
+.teQAzf {
+    margin: 0 !important;
+    width: 100% !important;
+    max-width: 0 !important;
+
 }
 
 .apps-frame {
