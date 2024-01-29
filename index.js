@@ -1,33 +1,22 @@
 import express from 'express'
 import mongoose from 'mongoose'
 import bodyParser from 'body-parser'
-import nodemailer from 'nodemailer'
 import axios from 'axios'
 import 'dotenv/config'
 
 const app = express()
 const port = 3000
 const mongoConfig = process.env.MONGO_CONFIG;
-const emailUser = process.env.EMAIL_USER;
-const emailPassword = process.env.EMAIL_PASSWORD;
 const todayDate = new Date().toISOString("en-GB", {timeZone: "Europe/London"})
-var transporter = nodemailer.createTransport({
-  host: "smtp.gmail.com",
-  port: 465,
-  secure: false, 
-  requireTLS: true,
-  logger: true,
-  debug: true,
-  auth: {
-      user: emailUser,
-      pass: emailPassword
-  }
-})
+
+const minorScales = ["C", "C-sharp", "D", "E-flat", "E", "F", "F-sharp", "G", "G-sharp", "A", "B-flat", "B"]
+const majorScales = ["C", "D-flat", "D", "E-flat", "E", "F", "F-sharp", "G", "A-flat", "A", "B-flat", "B"]
 
 app.use(express.static("public"))
 app.use(bodyParser.urlencoded({ extended: true }));
 
 await mongoose.connect(mongoConfig)
+// await mongoose.connect("mongodb://0.0.0.0:27017/concertsDB")
 
 const repSchema = new mongoose.Schema({
   composer: String,
@@ -48,8 +37,137 @@ const blogSchema = new mongoose.Schema({
   archived: Boolean
 })
 
+const examboardSchema = new mongoose.Schema({
+  board: String,
+  grades: Array
+})
+
+const scaleSchema = new mongoose.Schema({
+  type: String,
+  name: String,
+  group: String,
+  grades: {type: [examboardSchema]},
+  link: String
+})
+
 const Concert = mongoose.model("Concert", concertSchema)
 const Blog = mongoose.model("Blog", blogSchema)
+const Scale = mongoose.model("Scale", scaleSchema)
+
+/*
+minorScales.forEach(async (key) => {
+  let minorArpeggio = new Scale({
+    type: "minor-arpeggio",
+    name: key,
+    group: "arpeggios",
+    link: `/images/scales/minor/arpeggios/${key}.jpg`
+  })
+
+  let similarHarmonic = new Scale({
+    type: "similar-harmonic",
+    name: key,
+    group: "scales",
+    link: `/images/scales/minor/harmonic-minor/similar-motion/${key}.jpg`
+  })
+
+  let contraryHarmonic = new Scale({
+    type: "contrary-harmonic",
+    name: key,
+    group: "scales",
+    link: `/images/scales/minor/harmonic-minor/contrary-motion/${key}.jpg`
+  })
+
+  let harmonicThird = new Scale({
+    type: "harmonic-third",
+    name: key,
+    group: "scales",
+    link: `/images/scales/minor/harmonic-minor/thirds/${key}.jpg`
+  })
+
+  let harmonicSixth = new Scale({
+    type: "harmonic-sixth",
+    name: key,
+    group: "scales",
+    link: `/images/scales/minor/harmonic-minor/sixths/${key}.jpg`
+  })
+
+  let similarMelodic = new Scale({
+    type: "similar-melodic",
+    name: key,
+    group: "scales",
+    link: `/images/scales/minor/melodic-minor/similar-motion/${key}.jpg`
+  })
+
+  let melodicThird = new Scale({
+    type: "melodic-third",
+    name: key,
+    group: "scales",
+    link: `/images/scales/minor/melodic-minor/thirds/${key}.jpg`
+  })
+
+  let melodicSixth = new Scale({
+    type: "melodic-sixth",
+    name: key,
+    group: "scales",
+    link: `/images/scales/minor/melodic-minor/sixths/${key}.jpg`
+  })
+
+  await similarHarmonic.save()
+  await similarMelodic.save()
+  await contraryHarmonic.save()
+  await harmonicThird.save()
+  await melodicThird.save()
+  await harmonicSixth.save()
+  await melodicSixth.save()
+  await minorArpeggio.save()
+
+})
+
+
+majorScales.forEach(async (key) => {
+  let similarMajor = new Scale({
+    type: "similar-major",
+    name: key,
+    group: "scales",
+    link: `/images/scales/major/similar-motion/${key}.jpg`
+  })
+
+  let contraryMajor = new Scale({
+    type: "contrary-major",
+    name: key,
+    group: "scales",
+    link: `/images/scales/major/contrary-motion/${key}.jpg`
+  })
+
+  let majorThird = new Scale({
+    type: "major-third",
+    name: key,
+    group: "scales",
+    link: `/images/scales/major/thirds/${key}.jpg`
+  })
+
+  let majorSixth = new Scale({
+    type: "major-sixth",
+    name: key,
+    group: "scales",
+    link: `/images/scales/major/sixths/${key}.jpg`
+  })
+
+  let majorArpeggio = new Scale({
+    type: "major-arpeggio",
+    name: key,
+    group: "arpeggios",
+    link: `/images/scales/major/arpeggios/${key}.jpg`
+  })
+
+  await similarMajor.save()
+  await contraryMajor.save()
+  await majorThird.save()
+  await majorSixth.save()
+  await majorArpeggio.save()
+})
+*/
+
 
 app.get('/', (req, res) => {
   res.render("index.ejs")
@@ -90,9 +208,7 @@ app.get('/blog', async (req, res) => {
   let heading
   let link
   let blogCount
-  let archived = false
   if (req.query.archived) {
-    archived = true
     blogsList = await Blog.find({archived: true}).sort({_id: -1})
     blogCount = blogsList.length
     if (req.query.page) {
@@ -124,34 +240,6 @@ app.get('/posts/:post', async (req, res) => {
 
 app.get('/contact', async (req, res) => {
   res.render("contact.ejs", {pageName: "contact"})
-})
-
-app.post('/contact', async (req, res) => {
-  const emailTo = req.body.email
-  const subject = req.body.subject
-  const message = req.body.message
-
-  async function main() {
-    const info = await transporter.sendMail({
-      from: `Gary O'Shea <${emailUser}>`,
-      to: `gary@garyoshea.co.uk`,
-      subject: subject,
-      text: 
-`Form submission to garyoshea.co.uk.
-
-Email from: ${emailTo}
-Subject: ${subject}
-
-Message:
-${message}`
-
-    })
-  }
-  
-  main().catch(console.error);
-
-
-  res.render("contact.ejs", {confirmation: "Message sent!", pageName: "contact"})
 })
 
 app.get('/apps', (req, res) => {
@@ -236,6 +324,105 @@ app.get("/cmd/biog/:id", async (req, res) => {
   var randomWork = (await axios.post(API_URL + "/dyn/work/random?composer=" + composerId)).data["works"][0].title
 
   res.render("cmd/biog.ejs", {composer: composer, works: mainWorks, random: randomWork})
+})
+
+app.get('/apps/scales-helper', async (req, res) => {
+  res.render("scales-helper/index.ejs")
+})
+
+app.post('/apps/scales-helper', async (req, res) => {
+  let showImage = req.body['reveal-hint']
+  let arpeggio = req.body['arpeggios']
+  let scale = req.body['scales']
+  let boardOption = req.body['exam-board']
+  let gradeOption = req.body['grade']
+  let scaleOption = req.body['scale-options']
+  let arpeggioOption = req.body['arpeggio-options']
+  let exerciseName
+
+  let query = {}
+  if (!((arpeggio == "on") && (scale == "on"))) {
+    if (arpeggio == "on") {
+      query["group"] = "arpeggios"
+      if (!(arpeggioOption == "all")) {
+        query["type"] = arpeggioOption
+      }
+    } else if (scale == "on") {
+      query["group"] = "scales"
+      if (!(scaleOption == "all")) {
+        query["type"] = scaleOption
+      }
+    }
+  } else {
+    if (!((arpeggioOption == "all") && (scaleOption == "all"))) {
+      if ((!(arpeggioOption == "all")) && ((scaleOption == "all"))) {
+        query = {$or: [{"group": "scales"}, {"type": arpeggioOption}]}
+      } else if ((!(scaleOption == "all")) && ((arpeggioOption == "all"))) {
+        query = {$or: [{"group": "arpeggios"}, {"type": scaleOption}]}
+      } else {
+        query["type"] = {$in: [arpeggioOption, scaleOption]}
+      }
+    }
+  }
+
+  const results = await Scale.find(query)
+  const randomScale = results[Math.floor(Math.random() * results.length)]
+  let key = randomScale.name
+
+  switch (randomScale.type) {
+    case "minor-arpeggio":
+      exerciseName = `${key} minor arpeggio`
+      break
+    case "similar-harmonic":
+      exerciseName = `${key} harmonic minor scale, similar motion`
+      break
+    case "contrary-harmonic":
+      exerciseName = `${key} harmonic minor scale, contrary motion`
+      break
+    case "harmonic-third":
+      exerciseName = `${key} harmonic minor scale, third apart`
+      break
+    case "harmonic-sixth":
+      exerciseName = `${key} harmonic minor scale, sixth apart`
+      break
+    case "similar-melodic":
+      exerciseName = `${key} melodic minor scale, similar motion`
+      break
+    case "melodic-third":
+      exerciseName = `${key} melodic minor scale, third apart`
+      break
+    case "melodic-sixth":
+      exerciseName = `${key} melodic minor scale, sixth apart`
+      break
+    case "similar-major":
+      exerciseName = `${key} major scale, similar motion`
+      break
+    case "contrary-major":
+      exerciseName = `${key} major scale, contrary motion`
+      break
+    case "major-third":
+      exerciseName = `${key} major scale, third apart`
+      break
+    case "major-sixth":
+      exerciseName = `${key} major scale, sixth apart`
+      break
+    case "major-arpeggio":
+      exerciseName = `${key} major arpeggio`
+      break      
+  }
+
+  res.render("scales-helper/index.ejs", 
+  {
+    randomScale: randomScale,
+    showImage: showImage, 
+    exerciseName: exerciseName, 
+    arpeggio: arpeggio, 
+    scale: scale, 
+    boardOption: boardOption, 
+    scaleOption: scaleOption, 
+    arpeggioOption: arpeggioOption, 
+    gradeOption: gradeOption
+  })
 })
 
 app.listen(port, () => {
