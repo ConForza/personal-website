@@ -9,9 +9,6 @@ const port = 3000
 const mongoConfig = process.env.MONGO_CONFIG;
 const todayDate = new Date().toISOString("en-GB", {timeZone: "Europe/London"})
 
-const minorScales = ["C", "C-sharp", "D", "E-flat", "E", "F", "F-sharp", "G", "G-sharp", "A", "B-flat", "B"]
-const majorScales = ["C", "D-flat", "D", "E-flat", "E", "F", "F-sharp", "G", "A-flat", "A", "B-flat", "B"]
-
 app.use(express.static("public"))
 app.use(bodyParser.urlencoded({ extended: true }));
 
