@@ -20,8 +20,8 @@
         </p>
         <p>Grade
         <br>
-        <select name="grade" id="grade-options">
-            <option value="All">All</option>
+        <select name="grade" id="grade-options" disabled>
+            <option value="all">All</option>
             <option value="1">1</option>
             <option value="2">2</option>
             <option value="3">3</option>
@@ -35,9 +35,6 @@
         <% if (locals.boardOption) { %>
             <input type="hidden" id="boardOption" value="<%= boardOption %>">
         <% } %>
-        <% if (locals.boardOption) { %>
-            <input type="hidden" id="boardOption" value="<%= boardOption %>">
-        <% } %>
         <% if (locals.gradeOption) { %>
             <input type="hidden" id="gradeOption" value="<%= gradeOption %>">
         <% } %>
@@ -46,6 +43,9 @@
         <% } %>
         <% if (locals.scaleOption) { %>
             <input type="hidden" id="scaleOption" value="<%= scaleOption %>">
+        <% } %>
+        <% if (locals.errorMessage) { %>
+            <input type="hidden" id="err" value="<%= errorMessage %>">
         <% } %>
         <div class="scale-type">
         <div class="scale-chk">
@@ -115,6 +115,30 @@
         }
     })
 
+    $('#board-options').on("change", function() {
+        if ($("#board-options").val()) {
+            $("#grade-options").attr("disabled", false)
+        } else {
+            $("#grade-options").attr("disabled", true)
+        }
+    })
+
+    $('#scales').on("change", function() {
+        if ($(this).is(':checked')) {
+            $("#scale-options").attr("disabled", false)
+        } else {
+            $("#scale-options").attr("disabled", true)
+        }
+    })
+
+    $('#arpeggios').on("change", function() {
+        if ($(this).is(':checked')) {
+            $("#arpeggio-options").attr("disabled", false)
+        } else {
+            $("#arpeggio-options").attr("disabled", true)
+        }
+    })
+
     $(window).on("load", function() {
         if ($('#reveal-hint').is(':checked')) {
             $('.scale-img').addClass('show-img')
@@ -130,10 +154,11 @@
                 this.checked = true
             })
         }
-        
+
         if ($("#boardOption").val()) {
             var boardOption = $("#boardOption").val()
             $("#board-options").val(boardOption)
+            $("#grade-options").attr("disabled", false)
         }
 
         if ($("#gradeOption").val()) {
@@ -149,6 +174,23 @@
         if ($("#arpeggioOption").val()) {
             var arpeggioOption = $("#arpeggioOption").val()
             $("#arpeggio-options").val(arpeggioOption)
+        }
+
+        if ($("#err").val()) {
+            var err = $("#err").val()
+            alert(err)
+        }
+
+        if ($("#scales").is(':checked')) {
+            $("#scale-options").attr("disabled", false)
+        } else {
+            $("#scale-options").attr("disabled", true)
+        }
+
+        if ($("#arpeggios").is(':checked')) {
+            $("#arpeggio-options").attr("disabled", false)
+        } else {
+            $("#arpeggio-options").attr("disabled", true)
         }
     })
 

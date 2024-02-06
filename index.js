@@ -38,8 +38,8 @@ const blogSchema = new mongoose.Schema({
 })
 
 const examboardSchema = new mongoose.Schema({
-  board: String,
-  grades: Array
+  board: {type: String, required: true},
+  grades: {type: Array, required: true}
 })
 
 const scaleSchema = new mongoose.Schema({
@@ -53,121 +53,6 @@ const scaleSchema = new mongoose.Schema({
 const Concert = mongoose.model("Concert", concertSchema)
 const Blog = mongoose.model("Blog", blogSchema)
 const Scale = mongoose.model("Scale", scaleSchema)
-
-/*
-minorScales.forEach(async (key) => {
-  let minorArpeggio = new Scale({
-    type: "minor-arpeggio",
-    name: key,
-    group: "arpeggios",
-    link: `/images/scales/minor/arpeggios/${key}.jpg`
-  })
-
-  let similarHarmonic = new Scale({
-    type: "similar-harmonic",
-    name: key,
-    group: "scales",
-    link: `/images/scales/minor/harmonic-minor/similar-motion/${key}.jpg`
-  })
-
-  let contraryHarmonic = new Scale({
-    type: "contrary-harmonic",
-    name: key,
-    group: "scales",
-    link: `/images/scales/minor/harmonic-minor/contrary-motion/${key}.jpg`
-  })
-
-  let harmonicThird = new Scale({
-    type: "harmonic-third",
-    name: key,
-    group: "scales",
-    link: `/images/scales/minor/harmonic-minor/thirds/${key}.jpg`
-  })
-
-  let harmonicSixth = new Scale({
-    type: "harmonic-sixth",
-    name: key,
-    group: "scales",
-    link: `/images/scales/minor/harmonic-minor/sixths/${key}.jpg`
-  })
-
-  let similarMelodic = new Scale({
-    type: "similar-melodic",
-    name: key,
-    group: "scales",
-    link: `/images/scales/minor/melodic-minor/similar-motion/${key}.jpg`
-  })
-
-  let melodicThird = new Scale({
-    type: "melodic-third",
-    name: key,
-    group: "scales",
-    link: `/images/scales/minor/melodic-minor/thirds/${key}.jpg`
-  })
-
-  let melodicSixth = new Scale({
-    type: "melodic-sixth",
-    name: key,
-    group: "scales",
-    link: `/images/scales/minor/melodic-minor/sixths/${key}.jpg`
-  })
-
-  await similarHarmonic.save()
-  await similarMelodic.save()
-  await contraryHarmonic.save()
-  await harmonicThird.save()
-  await melodicThird.save()
-  await harmonicSixth.save()
-  await melodicSixth.save()
-  await minorArpeggio.save()
-
-})
-
-
-majorScales.forEach(async (key) => {
-  let similarMajor = new Scale({
-    type: "similar-major",
-    name: key,
-    group: "scales",
-    link: `/images/scales/major/similar-motion/${key}.jpg`
-  })
-
-  let contraryMajor = new Scale({
-    type: "contrary-major",
-    name: key,
-    group: "scales",
-    link: `/images/scales/major/contrary-motion/${key}.jpg`
-  })
-
-  let majorThird = new Scale({
-    type: "major-third",
-    name: key,
-    group: "scales",
-    link: `/images/scales/major/thirds/${key}.jpg`
-  })
-
-  let majorSixth = new Scale({
-    type: "major-sixth",
-    name: key,
-    group: "scales",
-    link: `/images/scales/major/sixths/${key}.jpg`
-  })
-
-  let majorArpeggio = new Scale({
-    type: "major-arpeggio",
-    name: key,
-    group: "arpeggios",
-    link: `/images/scales/major/arpeggios/${key}.jpg`
-  })
-
-  await similarMajor.save()
-  await contraryMajor.save()
-  await majorThird.save()
-  await majorSixth.save()
-  await majorArpeggio.save()
-})
-*/
-
 
 app.get('/', (req, res) => {
   res.render("index.ejs")
@@ -264,7 +149,7 @@ app.get('/apps/classical-music-database/', async (req, res) => {
 })
 
 app.post("/cmd/submit", (req, res) => {
-  let composer;
+  let composer
   try {
     composer = req.body.popular
   } catch (error) {
@@ -274,14 +159,14 @@ app.post("/cmd/submit", (req, res) => {
 });
 
 app.post("/cmd/submit-essential", (req, res) => {
-  let composer;
+  let composer
   try {
     composer = req.body.essential
   } catch (error) {
     console.error(error.message)
   }
   res.redirect(`biog/${composer}`)
-});
+})
 
 app.post("/cmd/search-by-letter", async (req, res) => {
   try {
@@ -289,32 +174,14 @@ app.post("/cmd/search-by-letter", async (req, res) => {
     searchResults = (await axios.get(API_URL + `/composer/list/name/${letter}.json`)).data
   } catch (error) {
     console.error(error.message)
-  }
-
-  res.render("cmd/search-results.ejs", {results: searchResults})
-});
-
-app.post("/cmd/search-by-period", async (req, res) => {
-  try {
-    var period = req.body.byPeriod
-    searchResults = (await axios.get(API_URL + `/composer/list/epoch/${period}.json`)).data
-  } catch (error) {
-    console.error(error.message)
-  }
-
-  res.render("cmd/search-results.ejs", {results: searchResults})
-});
-
-app.post("/cmd/search", async (req, res) => {
   try {
     var search = req.body.byName
     searchResults = (await axios.get(API_URL + `/composer/list/search/${search}.json`)).data
   } catch (error) {
     console.error(error.message)
-  }
-
+  }}
   res.render("cmd/search-results.ejs", {results: searchResults})
-});
+})
 
 app.get("/cmd/biog/:id", async (req, res) => {
   const composerId = req.params.id
@@ -364,66 +231,81 @@ app.post('/apps/scales-helper', async (req, res) => {
       }
     }
   }
-
-  const results = await Scale.find(query)
-  const randomScale = results[Math.floor(Math.random() * results.length)]
-  let key = randomScale.name
-
-  switch (randomScale.type) {
-    case "minor-arpeggio":
-      exerciseName = `${key} minor arpeggio`
-      break
-    case "similar-harmonic":
-      exerciseName = `${key} harmonic minor scale, similar motion`
-      break
-    case "contrary-harmonic":
-      exerciseName = `${key} harmonic minor scale, contrary motion`
-      break
-    case "harmonic-third":
-      exerciseName = `${key} harmonic minor scale, third apart`
-      break
-    case "harmonic-sixth":
-      exerciseName = `${key} harmonic minor scale, sixth apart`
-      break
-    case "similar-melodic":
-      exerciseName = `${key} melodic minor scale, similar motion`
-      break
-    case "melodic-third":
-      exerciseName = `${key} melodic minor scale, third apart`
-      break
-    case "melodic-sixth":
-      exerciseName = `${key} melodic minor scale, sixth apart`
-      break
-    case "similar-major":
-      exerciseName = `${key} major scale, similar motion`
-      break
-    case "contrary-major":
-      exerciseName = `${key} major scale, contrary motion`
-      break
-    case "major-third":
-      exerciseName = `${key} major scale, third apart`
-      break
-    case "major-sixth":
-      exerciseName = `${key} major scale, sixth apart`
-      break
-    case "major-arpeggio":
-      exerciseName = `${key} major arpeggio`
-      break      
+  if (boardOption) {
+    query["grades.board"] = boardOption
+    if (!(gradeOption == "all")) {
+      query["grades.grades"] = gradeOption
+    }
   }
 
-  res.render("scales-helper/index.ejs", 
-  {
-    randomScale: randomScale,
-    showImage: showImage, 
-    exerciseName: exerciseName, 
-    arpeggio: arpeggio, 
-    scale: scale, 
-    boardOption: boardOption, 
-    scaleOption: scaleOption, 
-    arpeggioOption: arpeggioOption, 
-    gradeOption: gradeOption
+  const results = await Scale.find(query)
+
+  if (results.length > 0) {
+    const randomScale = results[Math.floor(Math.random() * results.length)]
+    let key = randomScale.name
+
+    switch (randomScale.type) {
+      case "minor-arpeggio":
+        exerciseName = `${key} minor arpeggio`
+        break
+      case "similar-harmonic":
+        exerciseName = `${key} harmonic minor scale, similar motion`
+        break
+      case "contrary-harmonic":
+        exerciseName = `${key} harmonic minor scale, contrary motion`
+        break
+      case "harmonic-third":
+        exerciseName = `${key} harmonic minor scale, third apart`
+        break
+      case "harmonic-sixth":
+        exerciseName = `${key} harmonic minor scale, sixth apart`
+        break
+      case "similar-melodic":
+        exerciseName = `${key} melodic minor scale, similar motion`
+        break
+      case "melodic-third":
+        exerciseName = `${key} melodic minor scale, third apart`
+        break
+      case "melodic-sixth":
+        exerciseName = `${key} melodic minor scale, sixth apart`
+        break
+      case "similar-major":
+        exerciseName = `${key} major scale, similar motion`
+        break
+      case "contrary-major":
+        exerciseName = `${key} major scale, contrary motion`
+        break
+      case "major-third":
+        exerciseName = `${key} major scale, third apart`
+        break
+      case "major-sixth":
+        exerciseName = `${key} major scale, sixth apart`
+        break
+      case "major-arpeggio":
+        exerciseName = `${key} major arpeggio`
+        break
+      default:
+        exerciseName = `${key} ${randomScale.type}`
+      }
+
+      res.render("scales-helper/index.ejs", 
+        {
+          randomScale: randomScale,
+          showImage: showImage, 
+          exerciseName: exerciseName, 
+          arpeggio: arpeggio, 
+          scale: scale, 
+          boardOption: boardOption, 
+          scaleOption: scaleOption, 
+          arpeggioOption: arpeggioOption, 
+          gradeOption: gradeOption
+        })
+  } else {
+      res.render("scales-helper/index.ejs", {
+        errorMessage: "No scales found. Please check your search parameters.",
+    })
+    }
   })
-})
 
 app.listen(port, () => {
   console.log(`App listening on port ${port}`)
