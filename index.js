@@ -204,6 +204,16 @@ app.post('/apps/scales-helper', async (req, res) => {
   let arpeggioOption = req.body['arpeggio-options']
   let exerciseName
 
+  if (scaleOption == "separate-hands") {
+    const majorMinor = ["separate-hands-major", "separate-hands-harmonic"]
+    scaleOption = majorMinor[(Math.floor(Math.random() * 2))]
+  }
+
+  if (arpeggioOption == "separate-hands") {
+    const majorMinor = ["separate-hands-major-arpeggio", "separate-hands-minor-arpeggio"]
+    arpeggioOption = majorMinor[(Math.floor(Math.random() * 2))]
+  }
+
   let query = {}
   if (!((arpeggio == "on") && (scale == "on"))) {
     if (arpeggio == "on") {
@@ -236,6 +246,12 @@ app.post('/apps/scales-helper', async (req, res) => {
   }
 
   const results = await Scale.find(query)
+
+  function randomHandGenerator() {
+    const hands = ["left", "right"]
+    let randomHand = hands[(Math.floor(Math.random() * 2))]
+    return randomHand
+  }
 
   if (results.length > 0) {
     const randomScale = results[Math.floor(Math.random() * results.length)]
@@ -279,10 +295,30 @@ app.post('/apps/scales-helper', async (req, res) => {
         exerciseName = `${key} major scale, sixth apart`
         break
       case "major-arpeggio":
-        exerciseName = `${key} major arpeggio`
+        exerciseName = `${key} major arpeggio, hands together`
+        break
+      case "separate-hands-major":
+        exerciseName = exerciseName = `${key} major scale, ${randomHandGenerator()} hand only`
+        break
+      case "separate-hands-harmonic":
+        exerciseName = exerciseName = `${key} minor scale, ${randomHandGenerator()} hand only`
+        break
+      case "separate-hands-major-arpeggio":
+        exerciseName = exerciseName = `${key} major arpeggio, ${randomHandGenerator()} hand only`
+        break
+      case "separate-hands-minor-arpeggio":
+        exerciseName = exerciseName = `${key} minor arpeggio, ${randomHandGenerator()} hand only`
         break
       default:
         exerciseName = `${key} ${randomScale.type}`
+      }
+
+      if ((scaleOption == "separate-hands-major") || (scaleOption == "separate-hands-harmonic")) {
+        scaleOption = "separate-hands"
+      }
+
+      if ((arpeggioOption == "separate-hands-major-arpeggio") || (arpeggioOption == "separate-hands-minor-arpeggio")) {
+        arpeggioOption = "separate-hands"
       }
 
       res.render("scales-helper/index.ejs", 
