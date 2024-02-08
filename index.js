@@ -259,7 +259,7 @@ app.post('/apps/scales-helper', async (req, res) => {
 
     switch (randomScale.type) {
       case "minor-arpeggio":
-        exerciseName = `${key} minor arpeggio`
+        exerciseName = `${key} minor arpeggio, hands together`
         break
       case "similar-harmonic":
         exerciseName = `${key} harmonic minor scale, similar motion`
