@@ -301,7 +301,7 @@ app.post('/apps/scales-helper', async (req, res) => {
         exerciseName = exerciseName = `${key} major scale, ${randomHandGenerator()} hand only`
         break
       case "separate-hands-harmonic":
-        exerciseName = exerciseName = `${key} minor scale, ${randomHandGenerator()} hand only`
+        exerciseName = exerciseName = `${key} harmonic minor scale, ${randomHandGenerator()} hand only`
         break
       case "separate-hands-major-arpeggio":
         exerciseName = exerciseName = `${key} major arpeggio, ${randomHandGenerator()} hand only`
