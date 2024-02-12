@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Scales Helper</title>
+    <!-- Imports -->
+    <link rel="stylesheet" href="/css/scales-helper.css"/>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap" rel="stylesheet">
+</head>
+<body class="main-body">
+    <div class="query-form">
+    <!-- Query form with search options -->
+    <form action="/apps/scales-helper" method="post">
+        <p>Exam board
+        <br>
+        <select name="exam-board" class="dropdown-options" id="board-options">
+            <option value=""></option>
+            <option value="ABRSM">ABRSM</option>
+        </select>
+        </p>
+        <p>Grade
+        <br>
+        <select name="grade" id="grade-options" disabled>
+            <option value="all">All</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+        </select>
+        </p>
+        <!-- Imports from index.js, stored as variables to pass on to inline JS -->
+        <% if (locals.boardOption) { %>
+            <input type="hidden" id="boardOption" value="<%= boardOption %>">
+        <% } %>
+        <% if (locals.gradeOption) { %>
+            <input type="hidden" id="gradeOption" value="<%= gradeOption %>">
+        <% } %>
+        <% if (locals.arpeggioOption) { %>
+            <input type="hidden" id="arpeggioOption" value="<%= arpeggioOption %>">
+        <% } %>
+        <% if (locals.scaleOption) { %>
+            <input type="hidden" id="scaleOption" value="<%= scaleOption %>">
+        <% } %>
+        <% if (locals.errorMessage) { %>
+            <input type="hidden" id="err" value="<%= errorMessage %>">
+        <% } %>
+        <div class="scale-type">
+        <div class="scale-chk">
+        <!-- Checkbox default checked options depending on user settings -->
+        <% if (locals.scale) { %>
+            <input type="checkbox" name="scales" id="scales" class="scale-type-chk" checked><span>Scales</span>
+        <% } else { %>
+            <input type="checkbox" name="scales" id="scales" class="scale-type-chk"><span>Scales</span>
+        <% } %>
+        </div>
+        <div class="arpeggio-chk">
+        <% if (locals.arpeggio) { %>
+            <input type="checkbox" name="arpeggios" id="arpeggios" class="scale-type-chk" checked><span>Arpeggios</span>
+        <% } else { %>
+            <input type="checkbox" name="arpeggios" id="arpeggios" class="scale-type-chk"><span>Arpeggios</span>
+        <% } %>
+        </div>
+        </div>
+        <p class="scale-options">Scale options
+            <select id="scale-options" name="scale-options" class="dropdown-options">
+                <option value="all">All</option>
+                <option value="similar-major">Major keys, similar motion</option>
+                <option value="contrary-major">Major keys, contrary motion</option>
+                <option value="separate-hands">Separate hands scales</option>
+                <option value="major-third">Major keys, third apart</option>
+                <option value="major-sixth">Major keys, sixth apart</option>
+                <option value="similar-harmonic">Harmonic minor keys, similar motion</option>
+                <option value="contrary-harmonic">Harmonic minor keys, contrary motion</option>
+                <option value="harmonic-third">Harmonic minor keys, third apart</option>
+                <option value="harmonic-sixth">Harmonic minor keys, sixth apart</option>
+                <option value="similar-melodic">Melodic minor keys, similar motion</option>
+                <option value="melodic-third">Melodic minor keys, third apart</option>
+                <option value="melodic-sixth">Melodic minor keys, sixth apart</option>
+            </select>
+        </p>
+        <p class="arpeggio-options">Arpeggio options
+            <select id="arpeggio-options" name="arpeggio-options" class="dropdown-options">
+                <option value="all">All</option>
+                <option value="major-arpeggio">Major keys</option>
+                <option value="minor-arpeggio">Minor keys</option>
+                <option value="diminished-seventh">Diminished sevenths</option>
+                <option value="separate-hands">Separate hands</option>
+            </select>
+        </p>
+        <div class="btm-panel">
+        <div class="generate"><button type="submit">Generate</button></div>
+        <!-- Image reveal toggle -->
+        <% if (locals.showImage) { %>
+            <div class="reveal-group"><input type="checkbox" name="reveal-hint" id="reveal-hint" checked><span>Reveal</span></div>
+        <% } else { %>
+            <div class="reveal-group"><input type="checkbox" name="reveal-hint" id="reveal-hint"><span>Reveal</span></div>
+        <% } %>
+        </div>
+    </form>
+    <!-- Random scale result -->
+    <% if (locals.randomScale) { %>
+        <h3><%= exerciseName %></h3>
+    </div>
+    <div class="image-placeholder">
+        <img class="scale-img" src="<%= randomScale.link %>">
+    </div>
+    <% } %>
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script>
+    
+    // Show or hide image
+    $('#reveal-hint').on("click", function() {
+        if ($('#reveal-hint').is(':checked')) {
+            $('.scale-img').addClass('show-img')
+        } else {
+            $('.scale-img').removeClass("show-img")
+        }
+    })
+
+    // Select menus enable/diabled based on options
+    $('#board-options').on("change", function() {
+        if ($("#board-options").val()) {
+            $("#grade-options").attr("disabled", false)
+        } else {
+            $("#grade-options").attr("disabled", true)
+        }
+    })
+
+    $('#scales').on("change", function() {
+        if ($(this).is(':checked')) {
+            $("#scale-options").attr("disabled", false)
+        } else {
+            $("#scale-options").attr("disabled", true)
+        }
+    })
+
+    $('#arpeggios').on("change", function() {
+        if ($(this).is(':checked')) {
+            $("#arpeggio-options").attr("disabled", false)
+        } else {
+            $("#arpeggio-options").attr("disabled", true)
+        }
+    })
+
+    $(window).on("load", function() {
+        // Load previously selected options after generate button pressed
+        if ($('#reveal-hint').is(':checked')) {
+            $('.scale-img').addClass('show-img')
+        }
+        let tickedBoxes = false
+        $('.scale-type-chk').each(function() {
+            if (this.checked) {
+                tickedBoxes = true
+            }
+        })
+        if (!tickedBoxes) {
+            $('.scale-type-chk').each(function() {
+                this.checked = true
+            })
+        }
+
+        if ($("#boardOption").val()) {
+            var boardOption = $("#boardOption").val()
+            $("#board-options").val(boardOption)
+            $("#grade-options").attr("disabled", false)
+        }
+
+        if ($("#gradeOption").val()) {
+            var gradeOption = $("#gradeOption").val()
+            $("#grade-options").val(gradeOption)
+        }
+
+        if ($("#scaleOption").val()) {
+            var scaleOption = $("#scaleOption").val()
+            $("#scale-options").val(scaleOption)
+        }
+
+        if ($("#arpeggioOption").val()) {
+            var arpeggioOption = $("#arpeggioOption").val()
+            $("#arpeggio-options").val(arpeggioOption)
+        }
+
+        if ($("#err").val()) {
+            var err = $("#err").val()
+            alert(err)
+        }
+
+        if ($("#scales").is(':checked')) {
+            $("#scale-options").attr("disabled", false)
+        } else {
+            $("#scale-options").attr("disabled", true)
+        }
+
+        if ($("#arpeggios").is(':checked')) {
+            $("#arpeggio-options").attr("disabled", false)
+        } else {
+            $("#arpeggio-options").attr("disabled", true)
+        }
+    })
+
+    </script>
+</body>
+</html>

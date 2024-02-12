@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Classical Music Database</title>
+    <link rel="stylesheet" href="/css/cmd.css"/>
+</head>
+<!-- Query form -->
+<body class="main-body">
+    <div class="main-container">
+        <div>
+        <h1>Classical Music Database</h1>
+            <div>
+                <form action="/cmd/submit" name="composer-select" method="POST" autocomplete="off">
+                    <ul>
+                        <li>
+                            <h3>Popular composers</h3>
+                        </li>
+                        <li>
+                            <select name="popular">
+                                <!-- Load select menu options based on API perameters -->
+                                <option value=""></option>
+                                <% popular.composers.forEach(function(composer) { %>
+                                    <option value="<%= composer.id %>"><%= composer.name %></option>
+                                <% }) %>
+                            </select>
+                            <button type="submit">Go</button>
+                        </li>
+                    </ul>
+                </form>
+            </div>
+            <div>
+                <form action="/cmd/submit-essential" name="composer-select" method="POST" autocomplete="off">
+                    <ul>
+                        <li>
+                            <h3>Essential composers</h3>
+                        </li>
+                        <li>
+                            <select name="essential">
+                                <!-- Load select menu options based on API perameters -->
+                                <option value=""></option>
+                                <% essential.composers.forEach(function(composer) { %>
+                                    <option value="<%= composer.id %>"><%= composer.name %></option>
+                                <% }) %>
+                            </select>
+                            <button type="submit">Go</button>
+                        </li>
+                    </ul>
+                </form>
+            </div>
+            <div>
+                <form action="/cmd/search-by-letter" method="POST" autocomplete="off">
+                    <ul>
+                        <li>
+                            <h3>Search by first letter</h3>
+                        </li>
+                        <li>
+                            <select name="byLetter" id="by-letter">
+                                <option value=""></option>
+                                <!-- Display each alphabet letter in select menu -->
+                                <% const alphabet = 'abcdefghijklmnopqrstuvwxyz'.toUpperCase().split(''); %>
+                                <% alphabet.forEach(function(letter) { %>
+                                    <option value="<%= letter %>"><%= letter %></option>
+                                <% }) %>
+                            </select>
+                            <button type="submit">Go</button>
+                        </li>
+                    </ul>
+                </form>
+            </div>
+            <div>
+                <form action="/cmd/search-by-period" method="POST" autocomplete="off">
+                    <ul>
+                        <li>
+                            <h3>Search by period</h3>
+                        </li>
+                        <li>
+                            <select name="byPeriod">
+                                <option value=""></option>
+                                <option value="Medieval">Medieval</option>
+                                <option value="Renaissance">Renaissance</option>
+                                <option value="Baroque">Baroque</option>
+                                <option value="Classical">Classical</option>
+                                <option value="Early Romantic">Early Romantic</option>
+                                <option value="Romantic">Romantic</option>
+                                <option value="Late Romantic">Late Romantic</option>
+                                <option value="20th Century">20th Century</option>
+                                <option value="Post-War">Post-War</option>
+                                <option value="21st Century">21st Century</option>
+                            </select>
+                            <button type="submit">Go</button>
+                        </li>
+                    </ul>
+                </form>
+            </div>
+            <div>
+                <form action="/cmd/search" method="POST" autocomplete="off">
+                    <ul>
+                        <li>
+                            <h3>Search by name</h3>
+                        </li>
+                        <li>
+                            <input type="text" name="byName" placeholder="e.g. Beethoven"/>
+                            <button type="submit">Go</button>
+                        </li>
+                    </ul>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

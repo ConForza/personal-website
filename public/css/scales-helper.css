@@ -1,0 +1,127 @@
+select {
+    width: 150px;
+}
+
+.scale-img {
+    width: 50rem;
+    visibility: hidden;
+}
+
+.show-img {
+    visibility: visible;
+    border-style: dashed;
+    border-width: 2px;
+    border-color: #637A9F;
+}
+
+.hide-menu {
+    visibility: hidden;
+}
+
+.main-body {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: #FFF3CF;
+    color: #637A9F;
+    font-family: "Oswald", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 700;
+    font-style: normal;
+}
+
+.query-form {
+    width: 25%;
+}
+
+select {
+    width: 100%;
+}
+
+.btm-panel {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    display: flex;
+    flex-direction: row;
+}
+
+.generate {
+    flex-grow: 1;
+}
+
+.reveal-group {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: row;
+    justify-content: end;
+    margin-right: 10px;
+}
+
+span {
+    margin-left: 3px;
+    margin-right: 20px;
+}
+
+h3 {
+    border-style: solid;
+    border-width: 2px;
+    border-color: #637A9F;
+    padding: 5px;
+    text-align: center;
+    margin-top: 60px;
+}
+
+/* Media queries for portable device responsiveness */
+@media screen and (max-width: 1100px) {
+    .query-form {
+        width: 30%;
+    }
+}
+
+@media screen and (max-width: 800px) {
+    .query-form {
+        width: 40%;
+    }
+
+    .image-placeholder {
+        width: 90%;
+    }
+
+    .scale-img {
+        width: 100%;
+    }
+
+}
+
+@media screen and (max-device-width: 500px) {
+    .query-form {
+        width: 90%;
+    }
+
+    .image-placeholder {
+        width: 90%;
+    }
+
+    .scale-img {
+        width: 100%;
+    }
+
+    select, input, button {
+        height: 4rem;
+        font-size: 2.5rem;
+        padding: 10px;
+    }
+
+    p, span, h3 {
+        font-size: 2.5rem;
+    }
+
+    input[type=checkbox] {
+        margin: 4px 0 0;
+        width: 40px;
+        height: 40px;
+        margin-left: 10px;
+        margin-right: 20px;
+    }
+}

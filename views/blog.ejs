@@ -1,0 +1,85 @@
+<!-- Import header -->
+<%- include("partials/header.ejs") %>
+<body>
+<!-- Link to either new or archived blog posts -->
+<div class="blog-frame">
+    <div class="blog-heading-frame">
+        <h3 class="blog-heading"><%= heading %></h3>
+        <h6><%- link %></h6>
+    </div>
+    <!-- Load blog entries -->
+    <% if (locals.blogPosts.length > 0) { %>
+    <% blogPosts.forEach((blog) => { %>
+        <div class="blog-text">     
+            <h5 class="blog-title"><%= blog.title %></h5>
+            <!-- Show blog previews with links for entries <= 300 chars -->
+            <% if (blog.content.length > 300) { %>
+                <p><%- blog.content.slice(0, 299) %> <a class="blog-link" href="/posts/<%= blog._id %>">more...</a></p>
+                <% if (blog.date) { %>
+                    <p class="blog-timestamp">Posted on: <%= blog.date.toLocaleString('en-GB') %></p>
+                <% } else { %>
+                    <% const date = blog._id.getTimestamp() %>
+                    <p class="blog-timestamp">Posted on: <%= date.toLocaleString('en-GB') %></p>
+                <% } %>
+            <% } else { %>
+                <p><%- blog.content %></p>
+                <% if (blog.date) { %>
+                    <p class="blog-timestamp">Posted on: <%= blog.date.toLocaleString('en-GB') %></p>
+                <% } else { %>
+                    <% const date = blog._id.getTimestamp() %>
+                    <p class="blog-timestamp">Posted on: <%= date.toLocaleString('en-GB') %></p>
+                <% } %>
+            <% } %>
+        </div>
+        <% }) %>
+    <!-- Display page numbers -->
+    <% if (!query.page) { %>
+        <% query.page = 1 %>
+    <% } %>
+    <!-- Separate new and archived posts -->
+    <% if (query.archived) { %>
+        <div class="page-nav">
+            <p class="page-buttons">
+                <a id="first-page" href="/blog?archived=true"><i class="fa-solid fa-backward"></i></a>
+                <a id="back-step" href="/blog?archived=true&page=<%= parseInt(query.page) - 1 %>"><i class="fa-solid fa-backward-step"></i></a>
+                <label id="page-number"><%= query.page %></label>
+                <a id="forward-step" href="/blog?archived=true&page=<%= parseInt(query.page) + 1 %>"><i class="fa-solid fa-forward-step"></i></a>
+                <a id="last-page" href="/blog?archived=true&page=<%= Math.floor(blogCount / 10) + 1 %>"><i class="fa-solid fa-forward"></i></a>
+            </p>
+        </div>
+    <% } else { %>
+        <div class="page-nav">
+            <p class="page-buttons">
+                <a id="first-page" href="/blog"><i class="fa-solid fa-backward"></i></a>
+                <a id="back-step" href="/blog?page=<%= parseInt(query.page) - 1 %>"><i class="fa-solid fa-backward-step"></i></a>
+                <label id="page-number"><%= query.page %></label>
+                <a id="forward-step" href="/blog?page=<%= parseInt(query.page) + 1 %>"><i class="fa-solid fa-forward-step"></i></a>
+                <a id="last-page" href="/blog?page=<%= Math.floor(blogCount / 10) + 1 %>"><i class="fa-solid fa-forward"></i></a>
+            </p>
+        </div>
+    <% } %>
+    </div>
+    <% } else { %>
+        <div class="blog-text">  
+            <p>No posts to show.</p>
+        </div>  
+    </div>
+    <% } %>
+</div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<!-- Disable irrelevant buttons for navigation -->
+<% if (query.page == 1) { %>
+    <script>
+        $("#back-step").addClass("disabled-btn");
+        $("#first-page").addClass("disabled-btn");
+    </script>
+<% } %>
+<% if (query.page == Math.floor(blogCount / 10) + 1) { %>
+    <script>
+        $("#forward-step").addClass("disabled-btn");
+        $("#last-page").addClass("disabled-btn");
+    </script>
+<% } %>
+</body>
+<!-- Import footer -->
+<%- include("partials/footer.ejs") %>
