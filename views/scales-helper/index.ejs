@@ -34,22 +34,6 @@
             <option value="8">8</option>
         </select>
         </p>
-        <!-- Imports from index.js, stored as variables to pass on to inline JS -->
-        <% if (locals.boardOption) { %>
-            <input type="hidden" id="boardOption" value="<%= boardOption %>">
-        <% } %>
-        <% if (locals.gradeOption) { %>
-            <input type="hidden" id="gradeOption" value="<%= gradeOption %>">
-        <% } %>
-        <% if (locals.arpeggioOption) { %>
-            <input type="hidden" id="arpeggioOption" value="<%= arpeggioOption %>">
-        <% } %>
-        <% if (locals.scaleOption) { %>
-            <input type="hidden" id="scaleOption" value="<%= scaleOption %>">
-        <% } %>
-        <% if (locals.errorMessage) { %>
-            <input type="hidden" id="err" value="<%= errorMessage %>">
-        <% } %>
         <div class="scale-type">
         <div class="scale-chk">
         <!-- Checkbox default checked options depending on user settings -->
@@ -167,29 +151,30 @@
             })
         }
 
-        if ($("#boardOption").val()) {
-            var boardOption = $("#boardOption").val()
+        if ("<%= locals.boardOption %>") {
+            var boardOption = "<%= locals.boardOption %>"
+            console.log(boardOption)
             $("#board-options").val(boardOption)
             $("#grade-options").attr("disabled", false)
         }
 
-        if ($("#gradeOption").val()) {
-            var gradeOption = $("#gradeOption").val()
+        if ("<%= locals.gradeOption %>") {
+            var gradeOption = "<%= locals.gradeOption %>"
             $("#grade-options").val(gradeOption)
         }
 
-        if ($("#scaleOption").val()) {
-            var scaleOption = $("#scaleOption").val()
+        if ("<%= locals.scaleOption %>") {
+            var scaleOption = "<%= locals.scaleOption %>"
             $("#scale-options").val(scaleOption)
         }
 
-        if ($("#arpeggioOption").val()) {
-            var arpeggioOption = $("#arpeggioOption").val()
+        if ("<%= locals.arpeggioOption %>") {
+            var arpeggioOption = "<%= locals.arpeggioOption %>"
             $("#arpeggio-options").val(arpeggioOption)
         }
 
-        if ($("#err").val()) {
-            var err = $("#err").val()
+        if ("<%= locals.errorMessage %>") {
+            var err = "<%= locals.errorMessage %>"
             alert(err)
         }
 
