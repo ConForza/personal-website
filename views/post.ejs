@@ -1,20 +1,23 @@
 <!-- Import header -->
 <%- include("partials/header.ejs") %>
 <body>
-<div class="post-frame">
+  <div class="post-frame">
     <div class="blog-text">
-        <!-- Parse blog data -->
-        <h4 class="blog-title"><%= blogPost.title %></h4>
-        <p><%- blogPost.content %></p>
-        <br>
-        <% if (blogPost.date) { %>
-            <p class="blog-timestamp">Posted on: <%= blogPost.date.toLocaleString('en-GB') %></p>
-        <% } else { %>
-            <% const date = blogPost._id.getTimestamp() %>
-            <p class="blog-timestamp">Posted on: <%= date.toLocaleString('en-GB') %></p>
-        <% } %>
+      <!-- Parse blog data -->
+      <h4 class="blog-title"><%= blogPost.title %></h4>
+      <p><%- blogPost.content %></p>
+      <br />
+      <% if (blogPost.date) { %>
+      <p class="blog-timestamp">
+        Posted on: <%= blogPost.date.toLocaleString('en-GB') %>
+      </p>
+      <% } else { %> <% const date = blogPost._id.getTimestamp() %>
+      <p class="blog-timestamp">
+        Posted on: <%= date.toLocaleString('en-GB') %>
+      </p>
+      <% } %>
     </div>
-</div>
+  </div>
 </body>
 <!-- Import footer -->
 <%- include("partials/footer.ejs") %>
