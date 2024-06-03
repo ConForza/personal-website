@@ -422,6 +422,4 @@ app.post("/apps/scales-helper", async (req, res) => {
   }
 });
 
-app.listen(port, () => {
-  console.log(`App listening on port ${port}`);
-});
+app.listen(process.env.PORT || port);
