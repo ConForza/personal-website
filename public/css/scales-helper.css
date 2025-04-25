@@ -1,5 +1,11 @@
+/* General Styles */
 select {
   width: 150px;
+  border: 1px solid #7b8d8e; /* Lighter grey-green border */
+  border-radius: 5px;
+  padding: 10px;
+  background-color: #f1f1f1; /* Light background */
+  color: #333; /* Dark text */
 }
 
 .scale-img {
@@ -11,7 +17,7 @@ select {
   visibility: visible;
   border-style: dashed;
   border-width: 2px;
-  border-color: #637a9f;
+  border-color: #6d9dc5; /* Soft blue border */
 }
 
 .hide-menu {
@@ -23,8 +29,8 @@ select {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background-color: #fff3cf;
-  color: #637a9f;
+  background-color: #e0f0f1; /* Soft teal background */
+  color: #333; /* Dark text color */
   font-family: "Oswald", sans-serif;
   font-optical-sizing: auto;
   font-weight: 700;
@@ -33,6 +39,10 @@ select {
 
 .query-form {
   width: 25%;
+  background-color: #ffffff; /* White background for the form */
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Light shadow */
 }
 
 select {
@@ -61,15 +71,47 @@ select {
 span {
   margin-left: 3px;
   margin-right: 20px;
+  color: #333; /* Dark text color */
 }
 
 h3 {
   border-style: solid;
   border-width: 2px;
-  border-color: #637a9f;
+  border-color: #6d9dc5; /* Soft blue border */
   padding: 5px;
   text-align: center;
   margin-top: 60px;
+  background-color: #f7faff; /* Very light blue background */
+  color: #333; /* Dark text color */
+}
+
+/* Button Styles */
+button {
+  background-color: #4a90e2; /* Bright blue background */
+  color: #ffffff; /* White text */
+  border: none;
+  border-radius: 5px;
+  padding: 12px 20px; /* Slightly adjusted padding */
+  cursor: pointer;
+  font-size: 1rem; /* Font size slightly adjusted */
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+button:hover {
+  background-color: #357abd; /* Darker blue on hover */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Light shadow on hover */
+}
+
+button:focus {
+  outline: none;
+}
+
+/* Checkbox Styles */
+input[type="checkbox"] {
+  accent-color: #4a90e2; /* Bright blue for checkboxes */
+  margin: 4px 0 0;
+  width: 22px; /* Slightly smaller size */
+  height: 22px; /* Slightly smaller size */
 }
 
 /* Media queries for portable device responsiveness */
@@ -112,6 +154,10 @@ h3 {
     height: 4rem;
     font-size: 2.5rem;
     padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #7b8d8e; /* Lighter grey-green border */
+    background-color: #f1f1f1; /* Light background */
+    color: #333; /* Dark text color */
   }
 
   p,
@@ -122,9 +168,7 @@ h3 {
 
   input[type="checkbox"] {
     margin: 4px 0 0;
-    width: 40px;
-    height: 40px;
-    margin-left: 10px;
-    margin-right: 20px;
+    width: 22px; /* Slightly smaller size */
+    height: 22px; /* Slightly smaller size */
   }
 }
