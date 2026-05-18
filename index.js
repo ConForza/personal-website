@@ -9,6 +9,8 @@ import Concert from "./models/Concert.js";
 import Blog from "./models/Blog.js";
 import Scale from "./models/Scale.js";
 
+import pageRoutes from "./routes/pages.js";
+
 // Express setup
 
 const app = express();
@@ -22,19 +24,13 @@ app.set("view engine", "ejs");
 app.use(express.static("public"));
 app.use(bodyParser.urlencoded({ extended: true }));
 
+app.use("/", pageRoutes);
+
 await mongoose.connect(mongoConfig);
 // Option for local MongoDB:
 // await mongoose.connect("mongodb://0.0.0.0:27017/concertsDB")
 
 // Routes
-app.get("/", (req, res) => {
-  res.render("index.ejs");
-});
-
-app.get("/about", (req, res) => {
-  res.render("about.ejs", { pageName: "about" });
-});
-
 app.get("/concerts", async (req, res) => {
   let concertsList;
   let heading;
@@ -62,14 +58,6 @@ app.get("/concerts", async (req, res) => {
     heading: heading,
     link: link,
   });
-});
-
-app.get("/repertoire", (req, res) => {
-  res.render("repertoire.ejs", { pageName: "repertoire" });
-});
-
-app.get("/research", (req, res) => {
-  res.render("research.ejs", { pageName: "research" });
 });
 
 app.get("/blog", async (req, res) => {
@@ -124,14 +112,6 @@ app.get("/posts/:post", async (req, res) => {
   const blogPost = await Blog.findById(req.params.post);
 
   res.render("post.ejs", { pageName: "blog", blogPost: blogPost });
-});
-
-app.get("/contact", async (req, res) => {
-  res.render("contact.ejs", { pageName: "contact" });
-});
-
-app.get("/apps", (req, res) => {
-  res.render("apps.ejs", { pageName: "apps" });
 });
 
 // Classical Music Database
