@@ -132,3 +132,9 @@ Fields:
 
 - Decide whether to keep MongoDB or migrate to PostgreSQL.
 - If migrating, design relational schema first.
+
+## Completed refactors
+
+- Extracted Mongoose models into `models/`
+- Extracted static page routes into `routes/pages.js`
+- Created .env.example
