@@ -5,6 +5,12 @@ import bodyParser from "body-parser";
 import axios from "axios";
 import "dotenv/config";
 
+import Concert from "./models/Concert.js";
+import Blog from "./models/Blog.js";
+import Scale from "./models/Scale.js";
+
+// Express setup
+
 const app = express();
 const port = 3000;
 const mongoConfig = process.env.MONGO_CONFIG;
@@ -12,49 +18,13 @@ const todayDate = new Date().toISOString("en-GB", {
   timeZone: "Europe/London",
 });
 
+app.set("view engine", "ejs");
 app.use(express.static("public"));
 app.use(bodyParser.urlencoded({ extended: true }));
 
 await mongoose.connect(mongoConfig);
 // Option for local MongoDB:
 // await mongoose.connect("mongodb://0.0.0.0:27017/concertsDB")
-
-// Mongoose schemas
-const repSchema = new mongoose.Schema({
-  composer: String,
-  work: String,
-});
-
-const concertSchema = new mongoose.Schema({
-  date: Date,
-  venue: { type: String, required: true },
-  repertoire: { type: [repSchema], required: true },
-  notes: String,
-});
-
-const blogSchema = new mongoose.Schema({
-  date: Date,
-  title: String,
-  content: String,
-  archived: Boolean,
-});
-
-const examboardSchema = new mongoose.Schema({
-  board: { type: String, required: true },
-  grades: { type: Array, required: true },
-});
-
-const scaleSchema = new mongoose.Schema({
-  type: String,
-  name: String,
-  group: String,
-  grades: { type: [examboardSchema] },
-  link: String,
-});
-
-const Concert = mongoose.model("Concert", concertSchema);
-const Blog = mongoose.model("Blog", blogSchema);
-const Scale = mongoose.model("Scale", scaleSchema);
 
 // Routes
 app.get("/", (req, res) => {
@@ -116,7 +86,7 @@ app.get("/blog", async (req, res) => {
     if (req.query.page) {
       blogPosts = blogsList.splice(
         (req.query.page - 1) * 10,
-        req.query.page * 10
+        req.query.page * 10,
       );
     } else {
       blogPosts = blogsList.splice(0, 10);
@@ -130,7 +100,7 @@ app.get("/blog", async (req, res) => {
     if (req.query.page) {
       blogPosts = blogsList.splice(
         (req.query.page - 1) * 10,
-        req.query.page * 10
+        req.query.page * 10,
       );
     } else {
       blogPosts = blogsList.splice(0, 10);
@@ -234,7 +204,7 @@ app.get("/cmd/biog/:id", async (req, res) => {
   ).data.composers[0];
   var mainWorks = (
     await axios.get(
-      API_URL + `/work/list/composer/${composerId}/genre/Recommended.json`
+      API_URL + `/work/list/composer/${composerId}/genre/Recommended.json`,
     )
   ).data.works;
   var randomWork = (
