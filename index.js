@@ -10,55 +10,26 @@ import Blog from "./models/Blog.js";
 import Scale from "./models/Scale.js";
 
 import pageRoutes from "./routes/pages.js";
+import concertRoutes from "./routes/concerts.js";
 
 // Express setup
 
 const app = express();
 const port = process.env.PORT || 3000;
 const mongoConfig = process.env.MONGO_CONFIG;
-const todayDate = new Date().toISOString("en-GB", {
-  timeZone: "Europe/London",
-});
 
 app.set("view engine", "ejs");
 app.use(express.static("public"));
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use("/", pageRoutes);
+app.use("/", concertRoutes);
 
 await mongoose.connect(mongoConfig);
 // Option for local MongoDB:
 // await mongoose.connect("mongodb://0.0.0.0:27017/concertsDB")
 
 // Routes
-app.get("/concerts", async (req, res) => {
-  let concertsList;
-  let heading;
-  let link;
-  // Sort concert DB entries into date order, separating upcoming and past ones
-  if (req.query.past_concerts) {
-    concertsList = await Concert.find({ date: { $lt: todayDate } }).sort({
-      date: -1,
-    });
-    heading = "Past Concerts";
-    link =
-      '<a class="concert-link" href="/concerts">View upcoming concerts</a>';
-  } else {
-    concertsList = await Concert.find({ date: { $gte: todayDate } }).sort({
-      date: 1,
-    });
-    heading = "Upcoming Concerts";
-    link =
-      '<a class="concert-link" href="/concerts?past_concerts=true">View past concerts</a>';
-  }
-
-  res.render("concerts.ejs", {
-    pageName: "concerts",
-    concertsList: concertsList,
-    heading: heading,
-    link: link,
-  });
-});
 
 app.get("/blog", async (req, res) => {
   let blogPosts;
