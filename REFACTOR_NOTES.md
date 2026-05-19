@@ -1,5 +1,25 @@
 # Personal Website Refactor Notes
 
+## Completed refactors
+
+- Added `models/` folder and extracted Mongoose models.
+- Added `routes/pages.js` for static page routes.
+- Added `routes/concerts.js` for concert listing routes.
+- Added `routes/blog.js` for blog listing and individual post routes.
+- Added basic route-level error handling for concerts and blog pages.
+- Added a 404 response for missing blog posts.
+- Added `.env.example` for local setup.
+
+## Next planned refactors
+
+- Extract Classical Music Database routes.
+- Extract Scales Helper routes.
+- Add shared error-handling middleware.
+- Add admin route structure.
+- Add admin login using environment-configured credentials.
+- Add protected admin dashboard.
+- Add blog post create/edit/archive forms.
+
 ## Current app summary
 
 Express/EJS personal website for garyoshea.co.uk.
@@ -90,6 +110,15 @@ Fields:
 - `GET /apps/scales-helper`
 - `POST /apps/scales-helper`
 
+## Current route structure
+
+- `routes/pages.js` — static public pages.
+- `routes/concerts.js` — concert listings.
+- `routes/blog.js` — blog listing and individual posts.
+- Remaining in `index.js`:
+  - Classical Music Database routes.
+  - Scales Helper routes.
+
 ## Current issues
 
 - `index.js` does too much.
@@ -132,9 +161,3 @@ Fields:
 
 - Decide whether to keep MongoDB or migrate to PostgreSQL.
 - If migrating, design relational schema first.
-
-## Completed refactors
-
-- Extracted Mongoose models into `models/`
-- Extracted static page routes into `routes/pages.js`
-- Created .env.example
