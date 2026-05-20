@@ -35,4 +35,6 @@ await mongoose.connect(mongoConfig);
 // Option for local MongoDB:
 // await mongoose.connect("mongodb://0.0.0.0:27017/concertsDB")
 
-app.listen(process.env.PORT || port);
+app.listen(process.env.PORT || port, () => {
+  console.log(`Server is running on port ${port}`);
+});
