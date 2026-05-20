@@ -25,11 +25,18 @@ app.set("view engine", "ejs");
 app.use(express.static("public"));
 app.use(bodyParser.urlencoded({ extended: true }));
 
+// Routes
 app.use("/", pageRoutes);
 app.use("/", concertRoutes);
 app.use("/", blogRoutes);
 app.use("/", classicalMusicDatabaseRoutes);
 app.use("/", scalesHelperRoutes);
+
+app.use((req, res) => {
+  res.status(404).render("404.ejs");
+});
+
+// Connect to MongoDB and start server
 
 await mongoose.connect(mongoConfig);
 // Option for local MongoDB:
