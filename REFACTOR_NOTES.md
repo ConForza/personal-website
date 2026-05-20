@@ -9,6 +9,11 @@
 - Added basic route-level error handling for concerts and blog pages.
 - Added a 404 response for missing blog posts.
 - Added `.env.example` for local setup.
+- Extracted Classical Music Database routes into `routes/classicalMusicDatabase.js`
+- Fixed Classical Music Database search routes for letter, period, and name.
+- Extracted Scales Helper routes into `routes/scalesHelper.js`.
+- Simplified `index.js` so it mainly handles setup, route mounting, database connection, and server start.
+- Added a custom 404 page.
 
 ## Next planned refactors
 
