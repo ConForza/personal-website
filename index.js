@@ -12,6 +12,7 @@ import Scale from "./models/Scale.js";
 import pageRoutes from "./routes/pages.js";
 import concertRoutes from "./routes/concerts.js";
 import blogRoutes from "./routes/blog.js";
+import classicalMusicDatabaseRoutes from "./routes/classicalMusicDatabase.js";
 
 // Express setup
 
@@ -26,94 +27,10 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use("/", pageRoutes);
 app.use("/", concertRoutes);
 app.use("/", blogRoutes);
-
+app.use("/", classicalMusicDatabaseRoutes);
 await mongoose.connect(mongoConfig);
 // Option for local MongoDB:
 // await mongoose.connect("mongodb://0.0.0.0:27017/concertsDB")
-
-// Classical Music Database
-const API_URL = "https://api.openopus.org";
-var searchResults;
-
-app.get("/apps/classical-music-database/", async (req, res) => {
-  let popular;
-  let essential;
-
-  // Load data from API
-  try {
-    popular = (await axios.get(API_URL + "/composer/list/pop.json")).data;
-    essential = (await axios.get(API_URL + "/composer/list/rec.json")).data;
-  } catch (error) {
-    console.error(error.message);
-  }
-
-  res.render("cmd/index.ejs", { popular: popular, essential: essential });
-});
-
-// Composer searches, load biog pages
-app.post("/cmd/submit", (req, res) => {
-  let composer;
-  try {
-    composer = req.body.popular;
-  } catch (error) {
-    console.error(error.message);
-  }
-  res.redirect(`biog/${composer}`);
-});
-
-app.post("/cmd/submit-essential", (req, res) => {
-  let composer;
-  try {
-    composer = req.body.essential;
-  } catch (error) {
-    console.error(error.message);
-  }
-  res.redirect(`biog/${composer}`);
-});
-
-app.post("/cmd/search-by-letter", async (req, res) => {
-  try {
-    var letter = req.body.byLetter;
-    searchResults = (
-      await axios.get(API_URL + `/composer/list/name/${letter}.json`)
-    ).data;
-  } catch (error) {
-    console.error(error.message);
-    try {
-      var search = req.body.byName;
-      searchResults = (
-        await axios.get(API_URL + `/composer/list/search/${search}.json`)
-      ).data;
-    } catch (error) {
-      console.error(error.message);
-    }
-  }
-  res.render("cmd/search-results.ejs", { results: searchResults });
-});
-
-// Biog pages
-app.get("/cmd/biog/:id", async (req, res) => {
-  const composerId = req.params.id;
-
-  // Load data to be parsed
-  var composer = (
-    await axios.get(API_URL + `/composer/list/ids/${composerId}.json`)
-  ).data.composers[0];
-  var mainWorks = (
-    await axios.get(
-      API_URL + `/work/list/composer/${composerId}/genre/Recommended.json`,
-    )
-  ).data.works;
-  var randomWork = (
-    await axios.post(API_URL + "/dyn/work/random?composer=" + composerId)
-  ).data["works"][0].title;
-
-  res.render("cmd/biog.ejs", {
-    composer: composer,
-    works: mainWorks,
-    random: randomWork,
-  });
-});
 
 // Scales Helper app
 app.get("/apps/scales-helper", async (req, res) => {
