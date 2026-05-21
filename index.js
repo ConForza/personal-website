@@ -14,6 +14,7 @@ import concertRoutes from "./routes/concerts.js";
 import blogRoutes from "./routes/blog.js";
 import classicalMusicDatabaseRoutes from "./routes/classicalMusicDatabase.js";
 import scalesHelperRoutes from "./routes/scalesHelper.js";
+import adminRoutes from "./routes/admin.js";
 
 // Express setup
 
@@ -31,7 +32,9 @@ app.use("/", concertRoutes);
 app.use("/", blogRoutes);
 app.use("/", classicalMusicDatabaseRoutes);
 app.use("/", scalesHelperRoutes);
+app.use("/", adminRoutes);
 
+// 404 fallback
 app.use((req, res) => {
   res.status(404).render("404.ejs");
 });
