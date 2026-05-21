@@ -2,7 +2,18 @@ import express from "express";
 
 const router = express.Router();
 
+function requireAdmin(req, res, next) {
+  if (req.session.isAdmin) {
+    return next();
+  }
+  res.redirect("/admin/login");
+}
+
 router.get("/admin/login", (req, res) => {
+  if (req.session.isAdmin) {
+    return res.redirect("/admin");
+  }
+
   res.render("admin/login.ejs", { error: null });
 });
 
@@ -33,7 +44,7 @@ router.post("/admin/logout", (req, res) => {
   });
 });
 
-router.get("/admin", (req, res) => {
+router.get("/admin", requireAdmin, (req, res) => {
   res.render("admin/dashboard.ejs");
 });
 
