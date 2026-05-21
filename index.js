@@ -3,6 +3,7 @@ import express from "express";
 import mongoose from "mongoose";
 import bodyParser from "body-parser";
 import axios from "axios";
+import session from "express-session";
 import "dotenv/config";
 
 import Concert from "./models/Concert.js";
@@ -25,6 +26,16 @@ const mongoConfig = process.env.MONGO_CONFIG;
 app.set("view engine", "ejs");
 app.use(express.static("public"));
 app.use(bodyParser.urlencoded({ extended: true }));
+if (!process.env.SESSION_SECRET) {
+  throw new Error("SESSION_SECRET environment variable is not set.");
+}
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: true,
+  }),
+);
 
 // Routes
 app.use("/", pageRoutes);
