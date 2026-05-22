@@ -15,15 +15,21 @@
 - Simplified `index.js` so it mainly handles setup, route mounting, database connection, and server start.
 - Added a custom 404 page.
 
-## Next planned refactors
+## Completed admin features
 
-- Extract Classical Music Database routes.
-- Extract Scales Helper routes.
-- Add shared error-handling middleware.
-- Add admin route structure.
-- Add admin login using environment-configured credentials.
-- Add protected admin dashboard.
-- Add blog post create/edit/archive forms.
+- Added protected admin dashboard.
+- Added admin blog post list.
+- Added admin blog post creation.
+- Added admin blog post editing.
+- Added archive/unarchive toggle for blog posts.
+
+## Next admin improvements
+
+- Improve admin page styling.
+- Add success/error flash messages.
+- Add delete or draft workflow if needed.
+- Add CSRF protection before production use.
+- Consider password hashing or stronger admin authentication.
 
 ## Current app summary
 
