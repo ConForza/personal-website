@@ -157,4 +157,21 @@ router.post("/admin/posts/:id/edit", requireAdmin, async (req, res) => {
   }
 });
 
+router.post("/admin/posts/:id/archive", requireAdmin, async (req, res) => {
+  try {
+    const post = await Blog.findById(req.params.id);
+    if (!post) {
+      return res.status(404).send("Blog post not found.");
+    }
+
+    post.archived = !post.archived;
+    await post.save();
+
+    res.redirect("/admin/posts");
+  } catch (error) {
+    console.error("Error archiving blog post:", error.message);
+    res.status(500).send("An error occurred while archiving the blog post.");
+  }
+});
+
 export default router;

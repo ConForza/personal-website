@@ -46,6 +46,16 @@
               <p>
                 <a href="/admin/posts/<%= post._id %>/edit">Edit post</a>
               </p>
+
+              <form method="POST" action="/admin/posts/<%= post._id %>/archive" onsubmit="return confirm('Are you sure you want to <% if (post.archived) { %>unarchive<% } else { %>archive<% } %> this post?');">
+                <button type="submit">
+                  <% if (post.archived) { %>
+                    Unarchive post
+                  <% } else { %>
+                    Archive post
+                  <% } %>
+                </button>
+              </form>
             </li>
           <% }) %>
         </ul>
