@@ -99,4 +99,62 @@ router.post("/admin/posts", requireAdmin, async (req, res) => {
   }
 });
 
+router.get("/admin/posts/:id/edit", requireAdmin, async (req, res) => {
+  try {
+    const post = await Blog.findById(req.params.id);
+    if (!post) {
+      return res.status(404).send("Blog post not found.");
+    }
+
+    res.render("admin/post-form.ejs", {
+      formTitle: "Edit Blog Post",
+      action: `/admin/posts/${post._id}/edit`,
+      post,
+      error: null,
+    });
+  } catch (error) {
+    console.error("Error fetching blog post:", error.message);
+    res.status(500).send("An error occurred while fetching the blog post.");
+  }
+});
+
+router.post("/admin/posts/:id/edit", requireAdmin, async (req, res) => {
+  try {
+    const { title, date, content, archived } = req.body;
+    if (!title || !content) {
+      return res.status(400).render("admin/post-form.ejs", {
+        formTitle: "Edit Blog Post",
+        action: `/admin/posts/${req.params.id}/edit`,
+        post: {
+          _id: req.params.id,
+          title,
+          date,
+          content,
+          archived: archived === "on",
+        },
+        error: "Title and content are required.",
+      });
+    }
+    const updatedPost = await Blog.findByIdAndUpdate(
+      req.params.id,
+      {
+        title,
+        date,
+        content,
+        archived: archived === "on",
+      },
+      { new: true },
+    );
+
+    if (!updatedPost) {
+      return res.status(404).send("Blog post not found.");
+    }
+
+    res.redirect("/admin/posts");
+  } catch (error) {
+    console.error("Error updating blog post:", error.message);
+    res.status(500).send("An error occurred while updating the blog post.");
+  }
+});
+
 export default router;
