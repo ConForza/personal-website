@@ -1,4 +1,5 @@
 import express from "express";
+import Blog from "../models/Blog.js";
 
 const router = express.Router();
 
@@ -46,6 +47,16 @@ router.post("/admin/logout", (req, res) => {
 
 router.get("/admin", requireAdmin, (req, res) => {
   res.render("admin/dashboard.ejs");
+});
+
+router.get("/admin/posts", requireAdmin, async (req, res) => {
+  try {
+    const posts = await Blog.find().sort({ _id: -1 });
+    res.render("admin/posts.ejs", { posts });
+  } catch (error) {
+    console.error("Error fetching blog posts:", error.message);
+    res.status(500).send("An error occurred while fetching blog posts.");
+  }
 });
 
 export default router;

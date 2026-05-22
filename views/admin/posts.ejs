@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Blog Posts</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+  </head>
+  <body>
+    <main class="main-container">
+      <h1>Admin Blog Posts</h1>
+
+      <p>
+        <a href="/admin">Back to dashboard</a>
+      </p>
+
+      <p>
+        <a href="/admin/posts/new">Create new post</a>
+      </p>
+
+      <% if (!posts || posts.length === 0) { %>
+        <p>No blog posts found.</p>
+      <% } else { %>
+        <ul>
+          <% posts.forEach(post => { %>
+            <li>
+              <h2><%= post.title %></h2>
+
+              <% if (post.date) { %>
+                <p>Date: <%= post.date %></p>
+              <% } %>
+
+              <p>
+                Status:
+                <% if (post.archived) { %>
+                  Archived
+                <% } else { %>
+                  Live
+                <% } %>
+              </p>
+
+              <p>
+                <a href="/posts/<%= post._id %>">View public post</a>
+              </p>
+
+              <p>
+                Edit/archive controls coming next.
+              </p>
+            </li>
+          <% }) %>
+        </ul>
+      <% } %>
+    </main>
+  </body>
+</html>
