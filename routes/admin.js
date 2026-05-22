@@ -59,4 +59,44 @@ router.get("/admin/posts", requireAdmin, async (req, res) => {
   }
 });
 
+router.get("/admin/posts/new", requireAdmin, (req, res) => {
+  res.render("admin/post-form.ejs", {
+    formTitle: "Create New Blog Post",
+    action: "/admin/posts",
+    post: {
+      title: "",
+      date: "",
+      content: "",
+      archived: false,
+    },
+    error: null,
+  });
+});
+
+router.post("/admin/posts", requireAdmin, async (req, res) => {
+  try {
+    const { title, date, content, archived } = req.body;
+    if (!title || !content) {
+      return res.status(400).render("admin/post-form.ejs", {
+        formTitle: "Create New Blog Post",
+        action: "/admin/posts",
+        post: { title, date, content, archived: archived === "on" },
+        error: "Title and content are required.",
+      });
+    }
+
+    await Blog.create({
+      title,
+      date,
+      content,
+      archived: archived === "on",
+    });
+
+    res.redirect("/admin/posts");
+  } catch (error) {
+    console.error("Error creating blog post:", error.message);
+    res.status(500).send("An error occurred while creating the blog post.");
+  }
+});
+
 export default router;
