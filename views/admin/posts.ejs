@@ -8,7 +8,11 @@
   </head>
   <body>
     <main class="main-container">
-      <h1>Admin Blog Posts</h1>
+      <h1>Manage Blog Posts</h1>
+
+      <% if (flashMessage) { %>
+        <p style="color: green;"><%= flashMessage %></p>
+      <% } %>
 
       <p>
         <a href="/admin">Back to dashboard</a>

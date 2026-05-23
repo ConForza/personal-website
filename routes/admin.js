@@ -18,6 +18,16 @@ router.get("/admin/login", (req, res) => {
   res.render("admin/login.ejs", { error: null });
 });
 
+function setFlashMessage(req, message) {
+  req.session.flashMessage = message;
+}
+
+function getFlashMessage(req) {
+  const message = req.session.flashMessage;
+  delete req.session.flashMessage;
+  return message;
+}
+
 router.post("/admin/login", (req, res) => {
   const { username, password } = req.body;
   const isValidAdmin =
@@ -52,7 +62,10 @@ router.get("/admin", requireAdmin, (req, res) => {
 router.get("/admin/posts", requireAdmin, async (req, res) => {
   try {
     const posts = await Blog.find().sort({ _id: -1 });
-    res.render("admin/posts.ejs", { posts });
+    res.render("admin/posts.ejs", {
+      posts,
+      flashMessage: getFlashMessage(req),
+    });
   } catch (error) {
     console.error("Error fetching blog posts:", error.message);
     res.status(500).send("An error occurred while fetching blog posts.");
@@ -92,6 +105,7 @@ router.post("/admin/posts", requireAdmin, async (req, res) => {
       archived: archived === "on",
     });
 
+    setFlashMessage(req, "Blog post created successfully.");
     res.redirect("/admin/posts");
   } catch (error) {
     console.error("Error creating blog post:", error.message);
@@ -150,6 +164,7 @@ router.post("/admin/posts/:id/edit", requireAdmin, async (req, res) => {
       return res.status(404).send("Blog post not found.");
     }
 
+    setFlashMessage(req, "Blog post updated successfully.");
     res.redirect("/admin/posts");
   } catch (error) {
     console.error("Error updating blog post:", error.message);
@@ -167,6 +182,10 @@ router.post("/admin/posts/:id/archive", requireAdmin, async (req, res) => {
     post.archived = !post.archived;
     await post.save();
 
+    setFlashMessage(
+      req,
+      `Blog post ${post.archived ? "archived" : "unarchived"} successfully.`,
+    );
     res.redirect("/admin/posts");
   } catch (error) {
     console.error("Error archiving blog post:", error.message);
