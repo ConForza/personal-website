@@ -7,13 +7,13 @@
     <link rel="stylesheet" href="/css/styles.css" />
   </head>
   <body>
-    <main class="main-container">
+    <main class="main-container admin-container">
       <nav class="admin-nav">
         <a href="/admin">Dashboard</a>
         <a href="/admin/posts">Manage Posts</a>
         <a href="/admin/posts/new">Create Post</a>
         <a href="/">View Site</a>
-        <form action="/admin/logout" method="POST" style="display: inline">
+        <form action="/admin/logout" method="POST">
           <button type="submit">Logout</button>
         </form>
       </nav>
@@ -26,9 +26,9 @@
       <% if (!posts || posts.length === 0) { %>
         <p>No blog posts found.</p>
       <% } else { %>
-        <ul>
+        <ul class="admin-post-list">
           <% posts.forEach(post => { %>
-            <li>
+            <li class="admin-card">
               <h2><%= post.title %></h2>
 
               <% if (post.date) { %>
@@ -44,23 +44,25 @@
                 <% } %>
               </p>
 
+              <div class="admin-actions">
               <p>
-                <a href="/posts/<%= post._id %>">View public post</a>
+                <a class="admin-button" href="/posts/<%= post._id %>">View public post</a>
               </p>
 
               <p>
-                <a href="/admin/posts/<%= post._id %>/edit">Edit post</a>
+                <a class="admin-button" href="/admin/posts/<%= post._id %>/edit">Edit post</a>
               </p>
 
               <form method="POST" action="/admin/posts/<%= post._id %>/archive" onsubmit="return confirm('Are you sure you want to <% if (post.archived) { %>unarchive<% } else { %>archive<% } %> this post?');">
-                <button type="submit">
+                <button type="submit" class="admin-button">
                   <% if (post.archived) { %>
-                    Unarchive post
+                    <span class="status-badge unarchived">Unarchive post</span>
                   <% } else { %>
-                    Archive post
+                    <span class="status-badge archived">Archive post</span>
                   <% } %>
                 </button>
               </form>
+              </div>
             </li>
           <% }) %>
         </ul>

@@ -7,11 +7,11 @@
     <link rel="stylesheet" href="/css/styles.css">
 </head>
 <body>
-  <main class="main-container">
+  <main class="main-container admin-container">
     <h1>Admin Login</h1>
 
     <% if (error) { %>
-        <p style="color: red;"><%= error %></p>
+        <p class="error-message"><%= error %></p>
     <% } %>
 
     <form action="/admin/login" method="POST">
@@ -24,7 +24,7 @@
             <input type="password" id="password" name="password" required>
         </div>
 
-        <button type="submit">Login</button>
+        <button type="submit" class="admin-button">Login</button>
     </form>
   </main>
 </body>
