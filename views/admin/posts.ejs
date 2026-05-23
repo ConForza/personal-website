@@ -8,19 +8,20 @@
   </head>
   <body>
     <main class="main-container">
+      <nav class="admin-nav">
+        <a href="/admin">Dashboard</a>
+        <a href="/admin/posts">Manage Posts</a>
+        <a href="/admin/posts/new">Create Post</a>
+        <a href="/">View Site</a>
+        <form action="/admin/logout" method="POST" style="display: inline">
+          <button type="submit">Logout</button>
+        </form>
+      </nav>
       <h1>Manage Blog Posts</h1>
 
       <% if (flashMessage) { %>
         <p style="color: green;"><%= flashMessage %></p>
       <% } %>
-
-      <p>
-        <a href="/admin">Back to dashboard</a>
-      </p>
-
-      <p>
-        <a href="/admin/posts/new">Create new post</a>
-      </p>
 
       <% if (!posts || posts.length === 0) { %>
         <p>No blog posts found.</p>

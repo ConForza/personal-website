@@ -8,11 +8,16 @@
   </head>
   <body>
     <main class="main-container">
+      <nav class="admin-nav">
+        <a href="/admin">Dashboard</a>
+        <a href="/admin/posts">Manage Posts</a>
+        <a href="/admin/posts/new">Create Post</a>
+        <a href="/">View Site</a>
+        <form action="/admin/logout" method="POST" style="display: inline">
+          <button type="submit">Logout</button>
+        </form>
+      </nav>
       <h1><%= formTitle %></h1>
-
-      <p>
-        <a href="/admin/posts">Back to posts</a>
-      </p>
 
       <% if (error) { %>
         <p style="color: red;"><%= error %></p>

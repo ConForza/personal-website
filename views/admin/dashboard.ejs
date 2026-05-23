@@ -8,15 +8,21 @@
   </head>
   <body>
     <main class="main-container">
+      <nav class="admin-nav">
+        <a href="/admin">Dashboard</a>
+        <a href="/admin/posts">Manage Posts</a>
+        <a href="/admin/posts/new">Create Post</a>
+        <a href="/">View Site</a>
+        <form action="/admin/logout" method="POST" style="display: inline">
+          <button type="submit">Logout</button>
+        </form>
+      </nav>
       <h1>Admin Dashboard</h1>
       <p>Admin area is connected.</p>
 
       <ul>
         <li><a href="/admin/posts">Manage Blog Posts</a></li>
       </ul>
-      <form action="/admin/logout" method="POST">
-        <button type="submit">Logout</button>
-      </form>
     </main>
   </body>
 </html>
