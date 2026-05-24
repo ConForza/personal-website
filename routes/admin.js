@@ -1,5 +1,6 @@
 import express from "express";
 import Blog from "../models/Blog.js";
+import bcrypt from "bcrypt";
 
 const router = express.Router();
 
@@ -28,11 +29,11 @@ function getFlashMessage(req) {
   return message;
 }
 
-router.post("/admin/login", (req, res) => {
+router.post("/admin/login", async (req, res) => {
   const { username, password } = req.body;
   const isValidAdmin =
     username === process.env.ADMIN_USERNAME &&
-    password === process.env.ADMIN_PASSWORD;
+    (await bcrypt.compare(password, process.env.ADMIN_PASSWORD_HASH));
 
   if (!isValidAdmin) {
     return res

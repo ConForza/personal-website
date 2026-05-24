@@ -29,6 +29,11 @@ app.use(bodyParser.urlencoded({ extended: true }));
 if (!process.env.SESSION_SECRET) {
   throw new Error("SESSION_SECRET environment variable is not set.");
 }
+if (!process.env.ADMIN_USERNAME || !process.env.ADMIN_PASSWORD_HASH) {
+  throw new Error(
+    "ADMIN_USERNAME and ADMIN_PASSWORD_HASH environment variables must be set.",
+  );
+}
 app.use(
   session({
     secret: process.env.SESSION_SECRET,
