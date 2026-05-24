@@ -10,11 +10,12 @@ export async function sendEmail({ name, email, message }) {
     replyTo: email,
     html: `
       <p>You have a new contact form submission:</p>
-      <ul>
+      <ul style="list-style-type: none; margin: 0; padding: 0;">
         <li><strong>Name:</strong> ${escapeHtml(name)}</li>
         <li><strong>Email:</strong> ${escapeHtml(email)}</li>
         <li><strong>Message:</Strong></li>
-        <p>${escapeHtml(message).replace(/\n/g, "<br>")}<p>
+        <br />
+        <li>${escapeHtml(message).replace(/\n/g, "<br>")}</li>
       </ul>
     `,
   });
