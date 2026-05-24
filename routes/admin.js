@@ -193,4 +193,26 @@ router.post("/admin/posts/:id/archive", requireAdmin, async (req, res) => {
   }
 });
 
+router.post("/admin/posts/:id/delete", requireAdmin, async (req, res) => {
+  try {
+    const deletedPost = await Blog.findByIdAndDelete(req.params.id);
+    if (!deletedPost) {
+      return res.status(404).send("Blog post not found.");
+    }
+
+    if (!deletedPost.archived) {
+      setFlashMessage(req, "Only archived posts can be deleted.");
+      return res.redirect("/admin/posts");
+    }
+
+    await Blog.findByIdAndDelete(req.params.id);
+
+    setFlashMessage(req, "Blog post deleted successfully.");
+    res.redirect("/admin/posts");
+  } catch (error) {
+    console.error("Error deleting blog post:", error.message);
+    res.status(500).send("An error occurred while deleting the blog post.");
+  }
+});
+
 export default router;
