@@ -5,8 +5,9 @@
     <div class="blog-text">
       <!-- Parse blog data -->
       <h4 class="blog-title"><%= blogPost.title %></h4>
-      <p><%- blogPost.content %></p>
-      <br />
+      <p>
+        <div class="blog-content"><%- blogPost.content %></div>
+      </p>
       <% if (blogPost.date) { %>
       <p class="blog-timestamp">
         Posted on: <%= blogPost.date.toLocaleString('en-GB') %>

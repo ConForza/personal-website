@@ -496,6 +496,10 @@ footer {
   color: #213555;
 }
 
+.blog-content {
+  white-space: pre-wrap;
+}
+
 .blog-timestamp {
   font-size: 0.8em;
   color: #213555;
