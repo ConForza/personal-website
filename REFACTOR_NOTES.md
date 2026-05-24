@@ -2,18 +2,28 @@
 
 ## Completed refactors
 
-- Added `models/` folder and extracted Mongoose models.
-- Added `routes/pages.js` for static page routes.
-- Added `routes/concerts.js` for concert listing routes.
-- Added `routes/blog.js` for blog listing and individual post routes.
-- Added basic route-level error handling for concerts and blog pages.
-- Added a 404 response for missing blog posts.
-- Added `.env.example` for local setup.
-- Extracted Classical Music Database routes into `routes/classicalMusicDatabase.js`
-- Fixed Classical Music Database search routes for letter, period, and name.
-- Extracted Scales Helper routes into `routes/scalesHelper.js`.
-- Simplified `index.js` so it mainly handles setup, route mounting, database connection, and server start.
-- Added a custom 404 page.
+- Refactored single-file Express app into route and model modules.
+- Extracted Mongoose models into `models/`.
+- Extracted public/static page routes.
+- Extracted concerts routes.
+- Extracted blog routes.
+- Extracted Classical Music Database routes.
+- Extracted Scales Helper routes.
+- Added route-level error handling.
+- Added custom 404 page.
+- Added protected admin dashboard.
+- Added admin blog management:
+  - list posts
+  - create posts
+  - edit posts
+  - archive/unarchive posts
+  - permanently delete archived posts only
+- Added flash messages.
+- Added admin styling/navigation.
+- Switched admin password verification to bcrypt.
+- Tightened session cookie settings.
+- Checked Heroku config vars.
+- Deployed and smoke-tested live site.
 
 ## Completed admin features
 
@@ -29,13 +39,14 @@
 - Added permanent delete flow for archived posts only.
 - Added delete confirmation page.
 
-## Remaining admin improvements
+## Future improvements
 
-- Add CSRF protection for admin forms.
-- Consider stronger password handling for admin login.
-- Consider extracting admin navigation into an EJS partial.
-- Improve public site styling.
-- Review Heroku config vars before deployment.
+- Add CSRF protection to admin forms.
+- Add admin login rate limiting.
+- Extract admin navigation into an EJS partial.
+- Consider richer blog editor support.
+- Improve public site CSS.
+- Consider MongoDB to PostgreSQL migration separately.
 
 ## Current app summary
 
@@ -64,11 +75,6 @@ Currently contains:
 - Concert routes
 - Classical Music Database app routes
 - Scales Helper app routes
-
-## Current environment variables
-
-- `MONGO_CONFIG` — MongoDB connection string
-- `PORT` — provided by Heroku in production
 
 ## Current database models
 
@@ -135,46 +141,3 @@ Fields:
 - Remaining in `index.js`:
   - Classical Music Database routes.
   - Scales Helper routes.
-
-## Current issues
-
-- `index.js` does too much.
-- Routes, schemas, models, and business logic are all mixed together.
-- No admin interface.
-- Blog posts currently require direct database editing.
-- No clear route separation.
-- No `.env.example`.
-- No README setup instructions.
-- MongoDB is used currently; PostgreSQL migration can be considered later.
-- Admin authentication needs adding before editing content through the site.
-
-## Planned improvements
-
-### Phase 1 — Safe refactor
-
-- Move Mongoose models into separate files.
-- Move route groups into `routes/`.
-- Keep existing views and behaviour unchanged.
-- Add `.env.example`.
-- Improve README.
-
-### Phase 2 — Admin dashboard
-
-- Add admin login.
-- Add protected admin routes.
-- Add blog post create/edit/archive forms.
-- Add logout.
-- Keep admin credentials in environment variables initially.
-
-### Phase 3 — CSS redesign
-
-- Improve layout consistency.
-- Improve typography.
-- Improve blog/post pages.
-- Improve mobile responsiveness.
-- Improve admin dashboard styling.
-
-### Phase 4 — Database migration consideration
-
-- Decide whether to keep MongoDB or migrate to PostgreSQL.
-- If migrating, design relational schema first.
