@@ -1,20 +1,37 @@
 <!-- Import header -->
 <%- include("partials/header.ejs") %>
 <body>
-  <!-- Import Google contact form -->
   <div class="contact-frame">
-    <div class="contact-text">
-      <iframe
-        class="google-form"
-        src="https://docs.google.com/forms/d/e/1FAIpQLScrwwk1mYDE2QN1hOBUvlW38Ob0iYwbHQBrhb1zVzoh6LVKmw/viewform?embedded=true"
-        height="813"
-        width="1300"
-        frameborder="0"
-        marginheight="0"
-        marginwidth="0"
-        >Loading…</iframe
-      >
+  <form class="contact-text" action="/contact" method="POST">
+    <% if (locals.error) { %>
+      <p class="error-message"><%= error %></p>
+    <% } %>
+
+    <% if (locals.successMessage) { %>
+      <p class="success-message"><%= successMessage %></p>
+    <% } %>
+
+    <h2>Contact Me</h2>
+    <div>
+      <label for="name">Name</label>
+      <input id="name" type="text" name="name" value="<%= locals.formData?.name || '' %>" required>
     </div>
+    <div>
+      <label for="email">Email</label>
+      <input id="email" type="email" name="email" value="<%= locals.formData?.email || '' %>" required>
+    </div>
+    <div>
+      <label for="message">Message</label>
+      <textarea id="message" name="message" rows="8" required><%= locals.formData?.message || '' %></textarea>
+    </div>
+
+    <div class="hidden-field">
+      <label for="website">Website</label>
+      <input id="website" name="website" type="text" autocomplete="off" tabindex="-1">
+    </div>
+
+    <button type="submit">Send Message</button>
+  </form>
   </div>
 </body>
 <!-- Import footer -->
