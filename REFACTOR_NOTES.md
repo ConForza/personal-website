@@ -22,14 +22,20 @@
 - Added admin blog post creation.
 - Added admin blog post editing.
 - Added archive/unarchive toggle for blog posts.
+- Added one-time admin flash messages.
+- Added admin navigation.
+- Added basic admin styling.
+- Improved admin post action layout.
+- Added permanent delete flow for archived posts only.
+- Added delete confirmation page.
 
-## Next admin improvements
+## Remaining admin improvements
 
-- Improve admin page styling.
-- Add success/error flash messages.
-- Add delete or draft workflow if needed.
-- Add CSRF protection before production use.
-- Consider password hashing or stronger admin authentication.
+- Add CSRF protection for admin forms.
+- Consider stronger password handling for admin login.
+- Consider extracting admin navigation into an EJS partial.
+- Improve public site styling.
+- Review Heroku config vars before deployment.
 
 ## Current app summary
 
