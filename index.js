@@ -23,6 +23,8 @@ const app = express();
 const port = process.env.PORT || 3000;
 const mongoConfig = process.env.MONGO_CONFIG;
 
+app.set("trust proxy", 1);
+
 app.set("view engine", "ejs");
 app.use(express.static("public"));
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -39,6 +41,11 @@ app.use(
     secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: true,
+    cookie: {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+    },
   }),
 );
 
