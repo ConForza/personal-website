@@ -177,7 +177,7 @@ router.post("/admin/repertoire", requireAdmin, async (req, res) => {
 
 function parseConcertRepertoire(value) {
   return String(value || "")
-    .split(/\\r?\\n/)
+    .split(/\r?\n/)
     .map((line) => line.trim())
     .filter(Boolean)
     .map((line) => {
