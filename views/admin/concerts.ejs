@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Manage Concerts</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+  </head>
+  <body>
+    <main class="main-container admin-container">
+      <nav class="admin-nav">
+        <a href="/admin">Dashboard</a>
+        <a href="/admin/posts">Manage Posts</a>
+        <a href="/admin/posts/new">Create Post</a>
+        <a href="/admin/biography">Edit Biography</a>
+        <a href="/admin/repertoire">Edit Repertoire</a>
+        <a href="/admin/concerts">Manage Concerts</a>
+        <a href="/">View Site</a>
+        <form action="/admin/logout" method="POST">
+          <button type="submit">Logout</button>
+        </form>
+      </nav>
+      <h1>Manage Concerts</h1>
+
+      <% if (flashMessage) { %>
+        <p style="color: green;"><%= flashMessage %></p>
+      <% } %>
+
+      <p><a class="admin-button" href="/admin/concerts/new">Add concert</a></p>
+
+      <% if (!concerts || concerts.length === 0) { %>
+        <p>No concerts found.</p>
+      <% } else { %>
+        <ul class="admin-post-list">
+          <% concerts.forEach((concert) => { %>
+            <li class="admin-card">
+              <h2>
+                <%= concert.date.toLocaleString("en-GB", { day: "numeric", month: "long", year: "numeric" }) %>
+                - <%= concert.venue %>
+              </h2>
+              <% if (concert.notes) { %>
+                <p><%= concert.notes %></p>
+              <% } %>
+              <p><%= concert.repertoire.length %> programme item<%= concert.repertoire.length === 1 ? "" : "s" %></p>
+              <div class="admin-actions">
+                <a class="admin-button" href="/admin/concerts/<%= concert._id %>/edit">Edit concert</a>
+                <form method="POST" action="/admin/concerts/<%= concert._id %>/delete" onsubmit="return confirm('Are you sure you want to delete this concert?');">
+                  <button type="submit" class="admin-button danger-button">Delete concert</button>
+                </form>
+              </div>
+            </li>
+          <% }) %>
+        </ul>
+      <% } %>
+    </main>
+  </body>
+</html>
