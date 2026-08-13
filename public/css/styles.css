@@ -965,3 +965,82 @@ li i {
     font-size: 2rem;
   }
 }
+
+
+/* Keep the protected admin editors compact and usable at every screen size. */
+.admin-container {
+  box-sizing: border-box;
+  width: min(100%, 900px);
+}
+
+.admin-container fieldset {
+  margin: 0 0 1.5rem;
+  padding: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+}
+
+.admin-container fieldset > div {
+  margin-bottom: 1rem;
+}
+
+.admin-container textarea {
+  box-sizing: border-box;
+  min-height: 10rem;
+  resize: vertical;
+}
+
+.admin-container .add-composer-button {
+  margin-bottom: 0.25rem;
+}
+
+@media screen and (max-width: 600px) {
+  .admin-container {
+    width: 100%;
+    padding: 1rem;
+  }
+
+  .admin-nav {
+    gap: 0.5rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .admin-nav a,
+  .admin-nav form {
+    flex: 1 1 100%;
+    width: 100%;
+  }
+
+  .admin-nav form button {
+    width: 100%;
+  }
+}
+
+@media screen and (max-device-width: 500px) {
+  .admin-container {
+    font-size: 1rem;
+  }
+
+  .admin-container h1 {
+    font-size: 1.5rem;
+  }
+
+  .admin-container h2 {
+    font-size: 1.25rem;
+  }
+
+  .admin-container input[type="text"],
+  .admin-container input[type="password"],
+  .admin-container textarea,
+  .admin-container button,
+  .admin-button {
+    font-size: 1rem;
+  }
+
+  .admin-nav a,
+  .admin-nav button {
+    min-height: 2.5rem;
+    height: auto;
+    font-size: 1rem;
+  }
+}
