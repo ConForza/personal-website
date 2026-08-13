@@ -15,12 +15,14 @@
           <ul class="<%= category.title === "Recital" ? "list-composer" : "" %>">
             <% category.items.forEach((item) => { %>
               <% if (item.composer) { %>
-                <li><h6><%= item.composer %></h6></li>
-                <ul>
-                  <% item.works.forEach((work) => { %>
-                    <li><%= work %></li>
-                  <% }) %>
-                </ul>
+                <li>
+                  <h6><%= item.composer %></h6>
+                  <ul>
+                    <% item.works.forEach((work) => { %>
+                      <li><%= work %></li>
+                    <% }) %>
+                  </ul>
+                </li>
               <% } else { %>
                 <% item.works.forEach((work) => { %>
                   <li><%= work %></li>
