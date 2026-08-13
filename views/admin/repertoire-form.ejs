@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Edit Repertoire</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+  </head>
+  <body>
+    <main class="main-container admin-container">
+      <nav class="admin-nav">
+        <a href="/admin">Dashboard</a>
+        <a href="/admin/posts">Manage Posts</a>
+        <a href="/admin/posts/new">Create Post</a>
+        <a href="/admin/biography">Edit Biography</a>
+        <a href="/admin/repertoire">Edit Repertoire</a>
+        <a href="/">View Site</a>
+        <form action="/admin/logout" method="POST">
+          <button type="submit">Logout</button>
+        </form>
+      </nav>
+      <h1>Edit Repertoire</h1>
+
+      <% if (error) { %>
+        <p class="error-message"><%= error %></p>
+      <% } %>
+
+      <p>Edit each section below. Put one work per line.</p>
+
+      <form action="/admin/repertoire" method="POST">
+        <% categories.forEach((category, categoryIndex) => { %>
+          <fieldset>
+            <legend>Section <%= categoryIndex + 1 %></legend>
+
+            <label for="category-<%= categoryIndex %>-title">Section title</label>
+            <input
+              type="text"
+              id="category-<%= categoryIndex %>-title"
+              name="categories[<%= categoryIndex %>][title]"
+              value="<%= category.title %>"
+              required
+            />
+
+            <% category.items.forEach((item, itemIndex) => { %>
+              <div>
+                <label for="category-<%= categoryIndex %>-item-<%= itemIndex %>-composer">
+                  Composer (leave blank for an ungrouped list)
+                </label>
+                <input
+                  type="text"
+                  id="category-<%= categoryIndex %>-item-<%= itemIndex %>-composer"
+                  name="categories[<%= categoryIndex %>][items][<%= itemIndex %>][composer]"
+                  value="<%= item.composer %>"
+                />
+
+                <label for="category-<%= categoryIndex %>-item-<%= itemIndex %>-works">
+                  Works
+                </label>
+                <textarea
+                  id="category-<%= categoryIndex %>-item-<%= itemIndex %>-works"
+                  name="categories[<%= categoryIndex %>][items][<%= itemIndex %>][works]"
+                  rows="8"
+                  required
+                ><%= item.works.join("\n") %></textarea>
+              </div>
+            <% }) %>
+          </fieldset>
+        <% }) %>
+
+        <button type="submit" class="admin-button">Save Repertoire</button>
+      </form>
+    </main>
+  </body>
+</html>

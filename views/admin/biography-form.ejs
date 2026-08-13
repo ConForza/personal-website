@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Edit Biography</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+  </head>
+  <body>
+    <main class="main-container admin-container">
+      <nav class="admin-nav">
+        <a href="/admin">Dashboard</a>
+        <a href="/admin/posts">Manage Posts</a>
+        <a href="/admin/posts/new">Create Post</a>
+        <a href="/admin/biography">Edit Biography</a>
+        <a href="/">View Site</a>
+        <form action="/admin/logout" method="POST">
+          <button type="submit">Logout</button>
+        </form>
+      </nav>
+      <h1>Edit Biography</h1>
+
+      <% if (error) { %>
+        <p class="error-message"><%= error %></p>
+      <% } %>
+
+      <p>Update the paragraphs shown on the public biography page.</p>
+
+      <form action="/admin/biography" method="POST">
+        <% paragraphs.forEach((paragraph, index) => { %>
+          <div>
+            <label for="paragraph-<%= index %>">Paragraph <%= index + 1 %></label>
+            <textarea
+              id="paragraph-<%= index %>"
+              name="paragraphs"
+              rows="8"
+              required
+            ><%= paragraph %></textarea>
+          </div>
+        <% }) %>
+
+        <button type="submit" class="admin-button">Save Biography</button>
+      </form>
+    </main>
+  </body>
+</html>

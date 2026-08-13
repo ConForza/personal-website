@@ -1,5 +1,8 @@
 import express from "express";
 import Blog from "../models/Blog.js";
+import Biography, { DEFAULT_PARAGRAPHS } from "../models/Biography.js";
+import Repertoire, { DEFAULT_REPERTOIRE } from "../models/Repertoire.js";
+import Concert from "../models/Concert.js";
 import bcrypt from "bcrypt";
 
 const router = express.Router();
@@ -58,6 +61,262 @@ router.post("/admin/logout", (req, res) => {
 
 router.get("/admin", requireAdmin, (req, res) => {
   res.render("admin/dashboard.ejs");
+});
+
+
+router.get("/admin/biography", requireAdmin, async (req, res) => {
+  try {
+    const biography = await Biography.findOneAndUpdate(
+      { key: "biography" },
+      { $setOnInsert: { paragraphs: DEFAULT_PARAGRAPHS } },
+      { new: true, upsert: true, setDefaultsOnInsert: true },
+    );
+
+    res.render("admin/biography-form.ejs", {
+      paragraphs: biography.paragraphs,
+      error: null,
+    });
+  } catch (error) {
+    console.error("Error fetching biography:", error.message);
+    res.status(500).send("An error occurred while fetching the biography.");
+  }
+});
+
+router.post("/admin/biography", requireAdmin, async (req, res) => {
+  try {
+    const submittedParagraphs = Array.isArray(req.body.paragraphs)
+      ? req.body.paragraphs
+      : [req.body.paragraphs];
+    const paragraphs = submittedParagraphs
+      .map((paragraph) => paragraph.trim())
+      .filter(Boolean);
+
+    if (paragraphs.length === 0) {
+      return res.status(400).render("admin/biography-form.ejs", {
+        paragraphs: submittedParagraphs,
+        error: "At least one biography paragraph is required.",
+      });
+    }
+
+    await Biography.findOneAndUpdate(
+      { key: "biography" },
+      { paragraphs },
+      { new: true, upsert: true, setDefaultsOnInsert: true },
+    );
+
+    setFlashMessage(req, "Biography updated successfully.");
+    res.redirect("/admin/biography");
+  } catch (error) {
+    console.error("Error updating biography:", error.message);
+    res.status(500).send("An error occurred while updating the biography.");
+  }
+});
+
+
+router.get("/admin/repertoire", requireAdmin, async (req, res) => {
+  try {
+    const repertoire = await Repertoire.findOneAndUpdate(
+      { key: "repertoire" },
+      { $setOnInsert: { categories: DEFAULT_REPERTOIRE } },
+      { new: true, upsert: true, setDefaultsOnInsert: true },
+    );
+
+    res.render("admin/repertoire-form.ejs", {
+      categories: repertoire.categories,
+      error: null,
+    });
+  } catch (error) {
+    console.error("Error fetching repertoire:", error.message);
+    res.status(500).send("An error occurred while fetching the repertoire.");
+  }
+});
+
+router.post("/admin/repertoire", requireAdmin, async (req, res) => {
+  try {
+    const submittedCategories = Array.isArray(req.body.categories)
+      ? req.body.categories
+      : [req.body.categories];
+    const categories = submittedCategories
+      .filter(Boolean)
+      .map((category) => ({
+        title: (category.title || "").trim(),
+        items: (Array.isArray(category.items) ? category.items : [category.items])
+          .filter(Boolean)
+          .map((item) => ({
+            composer: (item.composer || "").trim(),
+            works: (item.works || "")
+              .split("\n")
+              .map((work) => work.trim())
+              .filter(Boolean),
+          }))
+          .filter((item) => item.works.length > 0),
+      }))
+      .filter((category) => category.title && category.items.length > 0);
+
+    if (categories.length === 0) {
+      return res.status(400).render("admin/repertoire-form.ejs", {
+        categories: submittedCategories,
+        error: "At least one repertoire section with a work is required.",
+      });
+    }
+
+    await Repertoire.findOneAndUpdate(
+      { key: "repertoire" },
+      { categories },
+      { new: true, upsert: true, setDefaultsOnInsert: true },
+    );
+
+    setFlashMessage(req, "Repertoire updated successfully.");
+    res.redirect("/admin/repertoire");
+  } catch (error) {
+    console.error("Error updating repertoire:", error.message);
+    res.status(500).send("An error occurred while updating the repertoire.");
+  }
+});
+
+
+function parseConcertRepertoire(value) {
+  return String(value || "")
+    .split(/\r?\n/)
+    .map((line) => line.trim())
+    .filter(Boolean)
+    .map((line) => {
+      const separatorIndex = line.indexOf("|");
+      if (separatorIndex === -1) {
+        return { composer: "", work: line };
+      }
+      return {
+        composer: line.slice(0, separatorIndex).trim(),
+        work: line.slice(separatorIndex + 1).trim(),
+      };
+    })
+    .filter((work) => work.work);
+}
+
+function renderConcertForm(res, options) {
+  res.render("admin/concert-form.ejs", {
+    formTitle: options.formTitle,
+    action: options.action,
+    concert: options.concert,
+    dateValue: options.dateValue,
+    error: options.error,
+  });
+}
+
+router.get("/admin/concerts", requireAdmin, async (req, res) => {
+  try {
+    const concerts = await Concert.find().sort({ date: -1 });
+    res.render("admin/concerts.ejs", {
+      concerts,
+      flashMessage: getFlashMessage(req),
+    });
+  } catch (error) {
+    console.error("Error fetching concerts:", error.message);
+    res.status(500).send("An error occurred while fetching concerts.");
+  }
+});
+
+router.get("/admin/concerts/new", requireAdmin, (req, res) => {
+  renderConcertForm(res, {
+    formTitle: "Add Concert",
+    action: "/admin/concerts",
+    concert: { venue: "", notes: "", repertoire: [] },
+    dateValue: "",
+    error: null,
+  });
+});
+
+router.post("/admin/concerts", requireAdmin, async (req, res) => {
+  try {
+    const { date, venue, notes } = req.body;
+    const repertoire = parseConcertRepertoire(req.body.repertoire);
+    const parsedDate = new Date(date);
+
+    if (!venue || !date || Number.isNaN(parsedDate.getTime())) {
+      return res.status(400).render("admin/concert-form.ejs", {
+        formTitle: "Add Concert",
+        action: "/admin/concerts",
+        concert: { venue, notes, repertoire },
+        dateValue: date || "",
+        error: "A valid date and venue are required.",
+      });
+    }
+
+    await Concert.create({ date: parsedDate, venue, notes, repertoire });
+    setFlashMessage(req, "Concert created successfully.");
+    res.redirect("/admin/concerts");
+  } catch (error) {
+    console.error("Error creating concert:", error.message);
+    res.status(500).send("An error occurred while creating the concert.");
+  }
+});
+
+router.get("/admin/concerts/:id/edit", requireAdmin, async (req, res) => {
+  try {
+    const concert = await Concert.findById(req.params.id);
+    if (!concert) {
+      return res.status(404).send("Concert not found.");
+    }
+
+    renderConcertForm(res, {
+      formTitle: "Edit Concert",
+      action: `/admin/concerts/${concert._id}/edit`,
+      concert,
+      dateValue: new Date(concert.date).toISOString().slice(0, 16),
+      error: null,
+    });
+  } catch (error) {
+    console.error("Error fetching concert:", error.message);
+    res.status(500).send("An error occurred while fetching the concert.");
+  }
+});
+
+router.post("/admin/concerts/:id/edit", requireAdmin, async (req, res) => {
+  try {
+    const { date, venue, notes } = req.body;
+    const repertoire = parseConcertRepertoire(req.body.repertoire);
+    const parsedDate = new Date(date);
+
+    if (!venue || !date || Number.isNaN(parsedDate.getTime())) {
+      return res.status(400).render("admin/concert-form.ejs", {
+        formTitle: "Edit Concert",
+        action: `/admin/concerts/${req.params.id}/edit`,
+        concert: { venue, notes, repertoire },
+        dateValue: date || "",
+        error: "A valid date and venue are required.",
+      });
+    }
+
+    const updatedConcert = await Concert.findByIdAndUpdate(
+      req.params.id,
+      { date: parsedDate, venue, notes, repertoire },
+      { new: true, runValidators: true },
+    );
+    if (!updatedConcert) {
+      return res.status(404).send("Concert not found.");
+    }
+
+    setFlashMessage(req, "Concert updated successfully.");
+    res.redirect("/admin/concerts");
+  } catch (error) {
+    console.error("Error updating concert:", error.message);
+    res.status(500).send("An error occurred while updating the concert.");
+  }
+});
+
+router.post("/admin/concerts/:id/delete", requireAdmin, async (req, res) => {
+  try {
+    const deletedConcert = await Concert.findByIdAndDelete(req.params.id);
+    if (!deletedConcert) {
+      return res.status(404).send("Concert not found.");
+    }
+
+    setFlashMessage(req, "Concert deleted successfully.");
+    res.redirect("/admin/concerts");
+  } catch (error) {
+    console.error("Error deleting concert:", error.message);
+    res.status(500).send("An error occurred while deleting the concert.");
+  }
 });
 
 router.get("/admin/posts", requireAdmin, async (req, res) => {

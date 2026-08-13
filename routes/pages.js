@@ -1,5 +1,7 @@
 import express from "express";
 import { sendEmail } from "../services/emailService.js";
+import Biography, { DEFAULT_PARAGRAPHS } from "../models/Biography.js";
+import Repertoire, { DEFAULT_REPERTOIRE } from "../models/Repertoire.js";
 
 const router = express.Router();
 
@@ -7,12 +9,40 @@ router.get("/", (req, res) => {
   res.render("index.ejs");
 });
 
-router.get("/about", (req, res) => {
-  res.render("about.ejs", { pageName: "about" });
+router.get("/about", async (req, res) => {
+  try {
+    const biography = await Biography.findOneAndUpdate(
+      { key: "biography" },
+      { $setOnInsert: { paragraphs: DEFAULT_PARAGRAPHS } },
+      { new: true, upsert: true, setDefaultsOnInsert: true },
+    );
+
+    res.render("about.ejs", {
+      pageName: "about",
+      paragraphs: biography.paragraphs,
+    });
+  } catch (error) {
+    console.error("Error fetching biography:", error.message);
+    res.status(500).send("An error occurred while fetching the biography.");
+  }
 });
 
-router.get("/repertoire", (req, res) => {
-  res.render("repertoire.ejs", { pageName: "repertoire" });
+router.get("/repertoire", async (req, res) => {
+  try {
+    const repertoire = await Repertoire.findOneAndUpdate(
+      { key: "repertoire" },
+      { $setOnInsert: { categories: DEFAULT_REPERTOIRE } },
+      { new: true, upsert: true, setDefaultsOnInsert: true },
+    );
+
+    res.render("repertoire.ejs", {
+      pageName: "repertoire",
+      categories: repertoire.categories,
+    });
+  } catch (error) {
+    console.error("Error fetching repertoire:", error.message);
+    res.status(500).send("An error occurred while fetching the repertoire.");
+  }
 });
 
 router.get("/research", (req, res) => {
