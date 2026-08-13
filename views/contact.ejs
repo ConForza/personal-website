@@ -1,6 +1,5 @@
 <!-- Import header -->
 <%- include("partials/header.ejs") %>
-<body>
   <div class="contact-frame">
   <form class="contact-text" action="/contact" method="POST">
     <% if (locals.error) { %>
@@ -37,6 +36,5 @@
     <button type="submit">Send Message</button>
   </form>
   </div>
-</body>
 <!-- Import footer -->
 <%- include("partials/footer.ejs") %>
