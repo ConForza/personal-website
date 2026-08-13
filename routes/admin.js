@@ -100,7 +100,7 @@ router.post("/admin/biography", requireAdmin, async (req, res) => {
 
     await Biography.findOneAndUpdate(
       { key: "biography" },
-      { paragraphs },
+      { $set: { paragraphs } },
       { new: true, upsert: true, setDefaultsOnInsert: true },
     );
 
@@ -135,7 +135,9 @@ router.post("/admin/repertoire", requireAdmin, async (req, res) => {
   try {
     const submittedCategories = Array.isArray(req.body.categories)
       ? req.body.categories
-      : [req.body.categories];
+      : req.body.categories
+        ? [req.body.categories]
+        : [];
     const categories = submittedCategories
       .filter(Boolean)
       .map((category) => ({
@@ -162,7 +164,7 @@ router.post("/admin/repertoire", requireAdmin, async (req, res) => {
 
     await Repertoire.findOneAndUpdate(
       { key: "repertoire" },
-      { categories },
+      { $set: { categories } },
       { new: true, upsert: true, setDefaultsOnInsert: true },
     );
 
@@ -191,6 +193,14 @@ function parseConcertRepertoire(value) {
       };
     })
     .filter((work) => work.work);
+}
+
+function formatDateTimeLocal(date) {
+  const localDate = new Date(date);
+  const timezoneOffset = localDate.getTimezoneOffset();
+  return new Date(localDate.getTime() - timezoneOffset * 60 * 1000)
+    .toISOString()
+    .slice(0, 16);
 }
 
 function renderConcertForm(res, options) {
@@ -262,7 +272,7 @@ router.get("/admin/concerts/:id/edit", requireAdmin, async (req, res) => {
       formTitle: "Edit Concert",
       action: `/admin/concerts/${concert._id}/edit`,
       concert,
-      dateValue: new Date(concert.date).toISOString().slice(0, 16),
+      dateValue: formatDateTimeLocal(concert.date),
       error: null,
     });
   } catch (error) {
