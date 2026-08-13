@@ -1,5 +1,6 @@
 import express from "express";
 import Blog from "../models/Blog.js";
+import Biography, { DEFAULT_PARAGRAPHS } from "../models/Biography.js";
 import bcrypt from "bcrypt";
 
 const router = express.Router();
@@ -58,6 +59,55 @@ router.post("/admin/logout", (req, res) => {
 
 router.get("/admin", requireAdmin, (req, res) => {
   res.render("admin/dashboard.ejs");
+});
+
+
+router.get("/admin/biography", requireAdmin, async (req, res) => {
+  try {
+    const biography = await Biography.findOneAndUpdate(
+      { key: "biography" },
+      { $setOnInsert: { paragraphs: DEFAULT_PARAGRAPHS } },
+      { new: true, upsert: true, setDefaultsOnInsert: true },
+    );
+
+    res.render("admin/biography-form.ejs", {
+      paragraphs: biography.paragraphs,
+      error: null,
+    });
+  } catch (error) {
+    console.error("Error fetching biography:", error.message);
+    res.status(500).send("An error occurred while fetching the biography.");
+  }
+});
+
+router.post("/admin/biography", requireAdmin, async (req, res) => {
+  try {
+    const submittedParagraphs = Array.isArray(req.body.paragraphs)
+      ? req.body.paragraphs
+      : [req.body.paragraphs];
+    const paragraphs = submittedParagraphs
+      .map((paragraph) => paragraph.trim())
+      .filter(Boolean);
+
+    if (paragraphs.length === 0) {
+      return res.status(400).render("admin/biography-form.ejs", {
+        paragraphs: submittedParagraphs,
+        error: "At least one biography paragraph is required.",
+      });
+    }
+
+    await Biography.findOneAndUpdate(
+      { key: "biography" },
+      { paragraphs },
+      { new: true, upsert: true, setDefaultsOnInsert: true },
+    );
+
+    setFlashMessage(req, "Biography updated successfully.");
+    res.redirect("/admin/biography");
+  } catch (error) {
+    console.error("Error updating biography:", error.message);
+    res.status(500).send("An error occurred while updating the biography.");
+  }
 });
 
 router.get("/admin/posts", requireAdmin, async (req, res) => {
