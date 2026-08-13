@@ -24,10 +24,11 @@ export async function verifyTurnstileToken(
       payload.set("remoteip", remoteIp);
     }
 
-    const response = await request(TURNSTILE_VERIFY_URL, payload);
+    const response = await request(TURNSTILE_VERIFY_URL, payload, { timeout: 5000 });
     return response.data?.success === true;
   } catch (error) {
-    console.error("Turnstile verification failed:", error.message);
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    console.error("Turnstile verification failed:", errorMessage);
     return false;
   }
 }

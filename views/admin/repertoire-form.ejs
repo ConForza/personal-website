@@ -28,7 +28,8 @@
       <p>Edit each section below. Put one work per line.</p>
 
       <form action="/admin/repertoire" method="POST">
-        <% categories.forEach((category, categoryIndex) => { %>
+        <% const safeCategories = Array.isArray(categories) ? categories.filter(Boolean) : categories ? [categories] : []; %>
+        <% safeCategories.forEach((category, categoryIndex) => { %>
           <fieldset>
             <legend>Section <%= categoryIndex + 1 %></legend>
 
@@ -41,7 +42,8 @@
               required
             />
 
-            <% category.items.forEach((item, itemIndex) => { %>
+            <% const safeItems = Array.isArray(category.items) ? category.items.filter(Boolean) : category.items ? [category.items] : []; %>
+            <% safeItems.forEach((item, itemIndex) => { %>
               <div>
                 <label for="category-<%= categoryIndex %>-item-<%= itemIndex %>-composer">
                   Composer (leave blank for an ungrouped list)
@@ -61,7 +63,7 @@
                   name="categories[<%= categoryIndex %>][items][<%= itemIndex %>][works]"
                   rows="8"
                   required
-                ><%= item.works.join("\n") %></textarea>
+                ><%= Array.isArray(item.works) ? item.works.join("\n") : item.works || "" %></textarea>
               </div>
             <% }) %>
           </fieldset>
