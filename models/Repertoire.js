@@ -34,7 +34,7 @@ export const DEFAULT_REPERTOIRE = [
           "Sonata in B flat op. 22",
           "“Moonlight” Sonata in C Sharp Minor, op. 27 no. 2",
           "Sonata in A flat major, op. 26",
-          ""Waldstein" Sonata in C major, op. 53",
+          "\"Waldstein\" Sonata in C major, op. 53",
           "“Appassionata” Sonata in F minor, op. 57",
           "Bagatelles, op. 126",
         ],
