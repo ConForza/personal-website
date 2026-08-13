@@ -21,6 +21,9 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" href="/css/styles.css" />
+    <% if (pageName === "contact") { %>
+      <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+    <% } %>
     <body class="main-body">
       <div class="header-bubble">
         <div class="header-container">
