@@ -8,17 +8,7 @@
   </head>
   <body>
     <main class="main-container admin-container">
-      <nav class="admin-nav">
-        <a href="/admin">Dashboard</a>
-        <a href="/admin/posts">Manage Posts</a>
-        <a href="/admin/posts/new">Create Post</a>
-        <a href="/admin/biography">Edit Biography</a>
-        <a href="/admin/repertoire">Edit Repertoire</a>
-        <a href="/">View Site</a>
-        <form action="/admin/logout" method="POST">
-          <button type="submit">Logout</button>
-        </form>
-      </nav>
+      <%- include("partials/nav.ejs") %>
       <h1>Edit Repertoire</h1>
 
       <% if (error) { %>
@@ -66,11 +56,47 @@
                 ><%= Array.isArray(item.works) ? item.works.join("\n") : item.works || "" %></textarea>
               </div>
             <% }) %>
+
+            <button
+              type="button"
+              class="admin-button add-composer-button"
+              data-category-index="<%= categoryIndex %>"
+              data-next-item-index="<%= safeItems.length %>"
+            >
+              Add composer
+            </button>
           </fieldset>
         <% }) %>
 
         <button type="submit" class="admin-button">Save Repertoire</button>
       </form>
+
+      <script>
+        document.querySelectorAll(".add-composer-button").forEach((button) => {
+          button.addEventListener("click", () => {
+            const categoryIndex = button.dataset.categoryIndex;
+            const itemIndex = Number(button.dataset.nextItemIndex);
+            const itemContainer = document.createElement("div");
+
+            itemContainer.innerHTML =
+              '<label for="category-' + categoryIndex + '-item-' + itemIndex + '-composer">' +
+              'Composer (leave blank for an ungrouped list)' +
+              '</label>' +
+              '<input type="text" id="category-' + categoryIndex + '-item-' + itemIndex +
+              '-composer" name="categories[' + categoryIndex + '][items][' + itemIndex +
+              '][composer]" />' +
+              '<label for="category-' + categoryIndex + '-item-' + itemIndex + '-works">' +
+              'Works' +
+              '</label>' +
+              '<textarea id="category-' + categoryIndex + '-item-' + itemIndex +
+              '-works" name="categories[' + categoryIndex + '][items][' + itemIndex +
+              '][works]" rows="8" required></textarea>';
+
+            button.before(itemContainer);
+            button.dataset.nextItemIndex = String(itemIndex + 1);
+          });
+        });
+      </script>
     </main>
   </body>
 </html>

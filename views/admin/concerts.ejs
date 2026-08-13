@@ -8,18 +8,7 @@
   </head>
   <body>
     <main class="main-container admin-container">
-      <nav class="admin-nav">
-        <a href="/admin">Dashboard</a>
-        <a href="/admin/posts">Manage Posts</a>
-        <a href="/admin/posts/new">Create Post</a>
-        <a href="/admin/biography">Edit Biography</a>
-        <a href="/admin/repertoire">Edit Repertoire</a>
-        <a href="/admin/concerts">Manage Concerts</a>
-        <a href="/">View Site</a>
-        <form action="/admin/logout" method="POST">
-          <button type="submit">Logout</button>
-        </form>
-      </nav>
+      <%- include("partials/nav.ejs") %>
       <h1>Manage Concerts</h1>
 
       <% if (flashMessage) { %>
