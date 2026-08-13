@@ -1,6 +1,7 @@
 import express from "express";
 import Blog from "../models/Blog.js";
 import Biography, { DEFAULT_PARAGRAPHS } from "../models/Biography.js";
+import Repertoire, { DEFAULT_REPERTOIRE } from "../models/Repertoire.js";
 import bcrypt from "bcrypt";
 
 const router = express.Router();
@@ -107,6 +108,68 @@ router.post("/admin/biography", requireAdmin, async (req, res) => {
   } catch (error) {
     console.error("Error updating biography:", error.message);
     res.status(500).send("An error occurred while updating the biography.");
+  }
+});
+
+
+router.get("/admin/repertoire", requireAdmin, async (req, res) => {
+  try {
+    const repertoire = await Repertoire.findOneAndUpdate(
+      { key: "repertoire" },
+      { $setOnInsert: { categories: DEFAULT_REPERTOIRE } },
+      { new: true, upsert: true, setDefaultsOnInsert: true },
+    );
+
+    res.render("admin/repertoire-form.ejs", {
+      categories: repertoire.categories,
+      error: null,
+    });
+  } catch (error) {
+    console.error("Error fetching repertoire:", error.message);
+    res.status(500).send("An error occurred while fetching the repertoire.");
+  }
+});
+
+router.post("/admin/repertoire", requireAdmin, async (req, res) => {
+  try {
+    const submittedCategories = Array.isArray(req.body.categories)
+      ? req.body.categories
+      : [req.body.categories];
+    const categories = submittedCategories
+      .filter(Boolean)
+      .map((category) => ({
+        title: (category.title || "").trim(),
+        items: (Array.isArray(category.items) ? category.items : [category.items])
+          .filter(Boolean)
+          .map((item) => ({
+            composer: (item.composer || "").trim(),
+            works: (item.works || "")
+              .split("\n")
+              .map((work) => work.trim())
+              .filter(Boolean),
+          }))
+          .filter((item) => item.works.length > 0),
+      }))
+      .filter((category) => category.title && category.items.length > 0);
+
+    if (categories.length === 0) {
+      return res.status(400).render("admin/repertoire-form.ejs", {
+        categories: submittedCategories,
+        error: "At least one repertoire section with a work is required.",
+      });
+    }
+
+    await Repertoire.findOneAndUpdate(
+      { key: "repertoire" },
+      { categories },
+      { new: true, upsert: true, setDefaultsOnInsert: true },
+    );
+
+    setFlashMessage(req, "Repertoire updated successfully.");
+    res.redirect("/admin/repertoire");
+  } catch (error) {
+    console.error("Error updating repertoire:", error.message);
+    res.status(500).send("An error occurred while updating the repertoire.");
   }
 });
 
