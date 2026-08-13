@@ -2,8 +2,31 @@ import express from "express";
 import { sendEmail } from "../services/emailService.js";
 import Biography, { DEFAULT_PARAGRAPHS } from "../models/Biography.js";
 import Repertoire, { DEFAULT_REPERTOIRE } from "../models/Repertoire.js";
+import rateLimit from "express-rate-limit";
+import { verifyTurnstileToken } from "../services/turnstileService.js";
 
 const router = express.Router();
+
+const contactRateLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  limit: 5,
+  standardHeaders: "draft-7",
+  legacyHeaders: false,
+  handler: (req, res) => {
+    res.status(429).render("contact.ejs", {
+      pageName: "contact",
+      error: "Too many messages have been sent. Please try again later.",
+      formData: {
+        name: req.body?.name,
+        email: req.body?.email,
+        message: req.body?.message,
+      },
+      turnstileSiteKey: process.env.TURNSTILE_SITE_KEY,
+    });
+  },
+});
+
+
 
 router.get("/", (req, res) => {
   res.render("index.ejs");
@@ -54,10 +77,13 @@ router.get("/apps", (req, res) => {
 });
 
 router.get("/contact", (req, res) => {
-  res.render("contact.ejs", { pageName: "contact" });
+  res.render("contact.ejs", {
+    pageName: "contact",
+    turnstileSiteKey: process.env.TURNSTILE_SITE_KEY,
+  });
 });
 
-router.post("/contact", async (req, res) => {
+router.post("/contact", contactRateLimiter, async (req, res) => {
   const { name, email, message, website } = req.body;
   if (website) {
     return res.redirect("/contact");
@@ -68,6 +94,20 @@ router.post("/contact", async (req, res) => {
       pageName: "contact",
       error: "Please fill in all required fields.",
       formData: { name, email, message },
+      turnstileSiteKey: process.env.TURNSTILE_SITE_KEY,
+    });
+  }
+
+  const isTurnstileValid = await verifyTurnstileToken(
+    req.body["cf-turnstile-response"],
+    { remoteIp: req.ip },
+  );
+  if (!isTurnstileValid) {
+    return res.render("contact.ejs", {
+      pageName: "contact",
+      error: "Please complete the security check.",
+      formData: { name, email, message },
+      turnstileSiteKey: process.env.TURNSTILE_SITE_KEY,
     });
   }
 
@@ -77,6 +117,7 @@ router.post("/contact", async (req, res) => {
       pageName: "contact",
       successMessage: "Your message has been sent successfully!",
       formData: {},
+      turnstileSiteKey: process.env.TURNSTILE_SITE_KEY,
     });
   } catch (error) {
     console.error("Error sending email:", error);
@@ -85,6 +126,7 @@ router.post("/contact", async (req, res) => {
       error:
         "An error occurred while sending your message. Please try again later.",
       formData: { name, email, message },
+      turnstileSiteKey: process.env.TURNSTILE_SITE_KEY,
     });
   }
 });

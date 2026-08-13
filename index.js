@@ -36,6 +36,11 @@ if (!process.env.ADMIN_USERNAME || !process.env.ADMIN_PASSWORD_HASH) {
     "ADMIN_USERNAME and ADMIN_PASSWORD_HASH environment variables must be set.",
   );
 }
+if (!process.env.TURNSTILE_SITE_KEY || !process.env.TURNSTILE_SECRET_KEY) {
+  throw new Error(
+    "TURNSTILE_SITE_KEY and TURNSTILE_SECRET_KEY environment variables must be set.",
+  );
+}
 app.use(
   session({
     secret: process.env.SESSION_SECRET,

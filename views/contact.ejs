@@ -1,5 +1,6 @@
 <!-- Import header -->
 <%- include("partials/header.ejs") %>
+<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 <body>
   <div class="contact-frame">
   <form class="contact-text" action="/contact" method="POST">
@@ -29,6 +30,8 @@
       <label for="website">Website</label>
       <input id="website" name="website" type="text" autocomplete="off" tabindex="-1">
     </div>
+
+    <div class="cf-turnstile" data-sitekey="<%= turnstileSiteKey %>"></div>
 
     <button type="submit">Send Message</button>
   </form>
